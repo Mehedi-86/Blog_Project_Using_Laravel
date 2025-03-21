@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth; // Import Auth
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,9 +14,8 @@ use App\Http\Controllers\AdminController;
 */
 
 // Public Route (Homepage)
-Route::get('/', function () {
-    return view('welcome');
-});
+// Define the homepage route with a name
+Route::get('/', [HomeController::class, 'homepage'])->name('homepage');
 
 // Protected Routes (Require Authentication)
 Route::middleware([
@@ -30,7 +29,7 @@ Route::middleware([
     })->name('dashboard');
 
     // Admin Home Page
-    Route::get('/admin/home', [AdminController::class, 'index'])->name('admin.home');
+    Route::get('/admin/home', [HomeController::class, 'index'])->name('admin.home');
 });
 
 // Home Route Redirection
@@ -38,7 +37,7 @@ Route::get('/home', function () {
     if (Auth::check()) {
         return Auth::user()->usertype === 'admin' 
             ? redirect()->route('admin.home') 
-            : redirect()->route('dashboard');
+            : redirect()->route('homepage');
     }
     return redirect('/');
 })->name('home');

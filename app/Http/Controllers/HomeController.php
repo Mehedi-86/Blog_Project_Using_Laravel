@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class AdminController extends Controller
+class HomeController extends Controller
 {
     public function index()
     {
@@ -13,12 +13,18 @@ class AdminController extends Controller
             $usertype = Auth::user()->usertype;
 
             if ($usertype == 'admin') {
-                return view('admin.index'); // Ensure you have 'admin/home.blade.php'
+                return view('admin.adminhome'); // Ensure you have 'admin/home.blade.php'
             } else {
-                return redirect('/dashboard');
+                return redirect('homepage');
             }
         }
 
         return redirect()->route('login');
     }
+
+    public function homepage()
+  {
+    return view('home.homepage'); 
+  }
+
 }
