@@ -54,8 +54,8 @@
             </div>
 
             <div class="field_deg">
-                <label>Description</label>
-                <textarea name="description"></textarea>
+               <label>Description</label>
+               <textarea name="description" id="description"></textarea>
             </div>
 
             <div class="field_deg">
@@ -72,5 +72,17 @@
      
       <!-- footer section start -->
        @include('home.footer')
+
+       <script src="https://cdn.tiny.cloud/1/43ryrgz42cov96zpsu0vhqz1guhojcq6vmqfgc6clavjiirl/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+       <script>
+       tinymce.init({
+       selector: '#description',
+       menubar: false,
+       plugins: 'link image code lists',
+       toolbar: 'undo redo | styles | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | code',
+       height: 300
+     });
+     </script>
+
       </body>
 </html>

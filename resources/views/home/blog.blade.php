@@ -13,7 +13,7 @@
 
          <!-- banner section start -->
          
-       @include('home.banner')
+    
 
          <!-- banner section end -->
       </div>
@@ -23,12 +23,12 @@
 
       <!-- services section start -->
       
-       @include('home.services')
+       
 
       <!-- services section end -->
 
       <!-- about section start -->
-      
+     
       <!-- about section end -->
      
      

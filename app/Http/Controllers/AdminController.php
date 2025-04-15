@@ -108,4 +108,13 @@ class AdminController extends Controller
 
     }
 
+    public function admin_post()
+    {
+
+    $adminId = Auth::id();
+    $data = Post::where('user_id', $adminId)->get();
+    return view('admin.admin_post', compact('data'));
+   }
+
+
 }

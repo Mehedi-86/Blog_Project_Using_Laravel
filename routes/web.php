@@ -49,7 +49,7 @@ Route::get('/edit_page/{id}', [AdminController::class, 'edit_page']);
 
 Route::post('/update_post/{id}', [AdminController::class, 'update_post']);
 
-Route::get('/post_details/{id}', [HomeController::class, 'post_details']);
+Route::get('/post_details/{id}', [HomeController::class, 'post_details'])->name('post.details');
 
 Route::get('/create_post', [HomeController::class, 'create_post'])->middleware('auth');
 
@@ -66,3 +66,20 @@ Route::post('/update_post_data/{id}', [HomeController::class, 'update_post_data'
 Route::get('/accept_post/{id}', [AdminController::class, 'accept_post']);
 
 Route::get('/reject_post/{id}', [AdminController::class, 'reject_post']);
+
+Route::get('/admin_post', [AdminController::class, 'admin_post'])->middleware('auth');
+
+Route::post('/post/{id}/like', [HomeController::class, 'like'])->name('post.like');
+
+Route::post('/post/{id}/comment', [HomeController::class, 'storeComment'])->name('post.comment');
+
+Route::delete('/comment/delete/{id}', [HomeController::class, 'deleteComment'])->name('comment.delete');
+
+Route::put('/comment/update/{id}', [HomeController::class, 'updateComment'])->name('comment.update');
+
+Route::get('/about', [HomeController::class, 'about'])->name('about.page');
+
+Route::get('/blog', [HomeController::class, 'blog'])->name('blog.page');
+
+
+
