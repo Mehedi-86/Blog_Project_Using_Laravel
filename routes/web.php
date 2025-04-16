@@ -77,6 +77,12 @@ Route::delete('/comment/delete/{id}', [HomeController::class, 'deleteComment'])-
 
 Route::put('/comment/update/{id}', [HomeController::class, 'updateComment'])->name('comment.update');
 
+Route::post('/comment/{comment}/reply', [HomeController::class, 'storeReply'])->middleware('auth')->name('post.comment.reply');
+
+Route::put('/reply/{reply}/edit', [CommentController::class, 'updateReply'])->name('reply.update');
+
+Route::delete('/reply/{reply}', [CommentController::class, 'destroyReply'])->name('comment.reply.delete');
+
 Route::get('/about', [HomeController::class, 'about'])->name('about.page');
 
 Route::get('/blog', [HomeController::class, 'blog'])->name('blog.page');

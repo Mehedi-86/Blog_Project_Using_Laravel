@@ -38,7 +38,7 @@ class HomeController extends Controller
 
   public function post_details($id)
   {
-    $post = Post::find($id);
+    $post = Post::with(['comments.replies', 'comments.user'])->findOrFail($id);
     return view('home.post_details',compact('post'));
   }
 
@@ -212,6 +212,57 @@ public function about()
 public function blog()
 {
     return view('home.blog'); 
+}
+
+public function storeReply(Request $request, Comment $comment)
+{
+    if (!auth()->check()) {
+        return redirect()->route('login')->with('comment_error', 'Please log in to reply.');
+    }
+
+    $validated = $request->validate([
+        'body' => 'required|string|max:1000',
+    ]);
+
+    $reply = new Comment();
+    $reply->body = $validated['body'];
+    $reply->user_id = auth()->id();
+    $reply->parent_id = $comment->id;
+    $reply->post_id = $comment->post_id;
+    $reply->save();
+
+    return back()->with('comment_message', 'Reply posted successfully!')->withFragment('comment-section');
+}
+
+public function updateReply(Request $request, $id)
+{
+    $request->validate([
+        'body' => 'required|string|max:1000',
+    ]);
+
+    $reply = Comment::findOrFail($id);
+
+    if ($reply->user_id !== auth()->id()) {
+        return redirect()->back()->with('comment_error', 'Unauthorized action.');
+    }
+
+    $reply->body = $request->input('body');
+    $reply->save();
+
+    return redirect()->back()->with('comment_message', 'Reply updated successfully!');
+}
+
+public function destroyReply($id)
+{
+    $reply = Comment::findOrFail($id);
+
+    if ($reply->user_id !== auth()->id()) {
+        return redirect()->back()->with('comment_error', 'Unauthorized action.');
+    }
+
+    $reply->delete();
+
+    return redirect()->back()->with('comment_message', 'Reply deleted successfully!');
 }
 
 }

@@ -212,12 +212,12 @@
 <!-- Show Comments -->
 <div class="mt-4">
     <h6 style="font-weight: bold; font-size: 1.2rem;">{{ $post->comments->count() }} Comments</h6>
-    @foreach($post->comments as $comment)
+    @foreach($post->comments->whereNull('parent_id') as $comment)
     <div class="border rounded p-3 mb-3 position-relative">
         <div class="d-flex justify-content-between">
             <div>
                 <span class="comment-user" style="font-size: 1rem; font-weight: 600;">{{ $comment->user->name }}</span>:
-                <span class="comment-content" style="font-size: 1.05rem;">{{ $comment->body }}</span>
+                <span class="comment-content" style="font-size: 1.2rem; font-weight: 600;">{{ $comment->body }}</span>
             </div>
 
             @if(auth()->check() && auth()->id() === $comment->user_id)
@@ -247,43 +247,135 @@
         <div class="comment-time text-muted small mt-1" style="font-size: 0.85rem;">
             {{ $comment->created_at->diffForHumans() }}
         </div>
-    </div>
-    @endforeach
 
-    <!-- Edit Comment Modal -->
-    <div class="modal fade" id="editCommentModal" tabindex="-1" aria-labelledby="editCommentModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form id="editCommentForm" method="POST">
+        <!-- Reply Button -->
+        <button class="btn btn-primary btn-sm mt-2" onclick="toggleReplyForm({{ $comment->id }})">Reply</button>
+
+       <!-- Show Replies Button -->
+       <button class="btn btn-secondary btn-sm mt-2" onclick="toggleReplies({{ $comment->id }})">Show Replies</button>
+
+        <!-- Reply Form -->
+        <div id="reply-form-{{ $comment->id }}" class="mt-3" style="display: none;">
+            <form action="{{ route('post.comment.reply', $comment->id) }}" method="POST">
                 @csrf
-                @method('PUT')
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editCommentModalLabel">Edit Comment</h5>
-                    </div>
-                    <div class="modal-body">
-                        <textarea id="editCommentBody" name="body" class="form-control" rows="4" required></textarea>
-                    </div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Update</button>
-                    </div>
+                <div class="mb-3">
+                    <textarea name="body" class="form-control" rows="3" placeholder="Write a reply..." required></textarea>
                 </div>
+                <button type="submit" class="btn btn-primary btn btn-sm">Post Reply</button>
             </form>
         </div>
+
+        <!-- Replies Section -->
+        <div id="replies-{{ $comment->id }}" class="mt-3 ms-3" style="display: none;">
+            @if($comment->replies->count())
+                @foreach($comment->replies as $reply)
+                <div class="border rounded p-3 mb-3 position-relative">
+    <div class="d-flex justify-content-between">
+        <div>
+            <strong>{{ $reply->user->name }}:</strong>
+            <span>{{ $reply->body }}</span>
+        </div>
+
+        @if(auth()->check() && auth()->id() === $reply->user_id)
+        <!-- Dropdown Button for Reply -->
+        <div class="dropdown">
+            <button class="btn btn-sm btn-dark dropdown-toggle" type="button" id="dropdownMenuReply{{ $reply->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                ⋮
+            </button>
+            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuReply{{ $reply->id }}">
+                <li>
+                    <a class="dropdown-item" href="#" onclick="event.preventDefault(); openEditModal({{ $reply->id }}, '{{ $reply->body }}', true);">Edit</a>
+                </li>
+                <li>
+                    <form action="{{ route('comment.reply.delete', $reply->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this reply?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="dropdown-item text-danger">Delete</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+        @endif
     </div>
 
+    <div class="text-muted small mt-1">{{ $reply->created_at->diffForHumans() }}</div>
+</div>
+
+                @endforeach
+            @else
+                <div>No replies yet.</div>
+            @endif
+        </div>
+
+    </div>
+    @endforeach
+</div>
+
+<!-- Edit Comment Modal -->
+<div class="modal fade" id="editCommentModal" tabindex="-1" aria-labelledby="editCommentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="editCommentForm" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editCommentModalLabel">Edit Comment</h5>
+                </div>
+                <div class="modal-body">
+                    <textarea id="editCommentBody" name="body" class="form-control" rows="4" required></textarea>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 </div> <!-- End of comment-section -->
 
 <script>
-function openEditModal(commentId, commentBody) {
+function toggleReplyForm(commentId) {
+    const form = document.getElementById('reply-form-' + commentId);
+
+    // Toggle the visibility of the form
+    const isVisible = form.style.display === 'block';
+    form.style.display = isVisible ? 'none' : 'block';
+
+    if (!isVisible) {
+        // Wait for the form to be rendered and then scroll into view
+        setTimeout(() => {
+            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            const textarea = form.querySelector('textarea');
+            if (textarea) {
+                textarea.focus();
+            }
+        }, 100); // short delay to allow the DOM to update
+    }
+}
+
+
+function toggleReplies(commentId) {
+    const repliesSection = document.getElementById('replies-' + commentId);
+    repliesSection.style.display = repliesSection.style.display === 'none' ? 'block' : 'none';
+}
+
+function openEditModal(commentId, body, isReply = false) {
+    const form = document.getElementById('editCommentForm');
+    const actionUrl = isReply
+        ? `/reply/${commentId}/edit` // Your actual reply update route
+        : `/comment/${commentId}/edit`; // Your actual comment update route
+
+    form.action = actionUrl;
+    document.getElementById('editCommentBody').value = body;
     const modal = new bootstrap.Modal(document.getElementById('editCommentModal'));
-    document.getElementById('editCommentBody').value = commentBody;
-    document.getElementById('editCommentForm').action = `/comment/update/${commentId}`;
     modal.show();
 }
+
 </script>
+
 
 <!-- footer section start -->
 @include('home.footer')
