@@ -252,7 +252,12 @@
         <button class="btn btn-primary btn-sm mt-2" onclick="toggleReplyForm({{ $comment->id }})">Reply</button>
 
        <!-- Show Replies Button -->
-       <button class="btn btn-secondary btn-sm mt-2" onclick="toggleReplies({{ $comment->id }})">Show Replies</button>
+@if($comment->replies->count())
+    <button class="btn btn-secondary btn-sm mt-2" onclick="toggleReplies({{ $comment->id }}, this)">
+        Show Replies ({{ $comment->replies->count() }})
+    </button>
+@endif
+
 
         <!-- Reply Form -->
         <div id="reply-form-{{ $comment->id }}" class="mt-3" style="display: none;">
@@ -265,47 +270,16 @@
             </form>
         </div>
 
-        <!-- Replies Section -->
-        <div id="replies-{{ $comment->id }}" class="mt-3 ms-3" style="display: none;">
-            @if($comment->replies->count())
-                @foreach($comment->replies as $reply)
-                <div class="border rounded p-3 mb-3 position-relative">
-    <div class="d-flex justify-content-between">
-        <div>
-            <strong>{{ $reply->user->name }}:</strong>
-            <span>{{ $reply->body }}</span>
-        </div>
-
-        @if(auth()->check() && auth()->id() === $reply->user_id)
-        <!-- Dropdown Button for Reply -->
-        <div class="dropdown">
-            <button class="btn btn-sm btn-dark dropdown-toggle" type="button" id="dropdownMenuReply{{ $reply->id }}" data-bs-toggle="dropdown" aria-expanded="false">
-                ⋮
-            </button>
-            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuReply{{ $reply->id }}">
-                <li>
-                    <a class="dropdown-item" href="#" onclick="event.preventDefault(); openEditModal({{ $reply->id }}, '{{ $reply->body }}', true);">Edit</a>
-                </li>
-                <li>
-                    <form action="{{ route('comment.reply.delete', $reply->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this reply?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="dropdown-item text-danger">Delete</button>
-                    </form>
-                </li>
-            </ul>
-        </div>
-        @endif
-    </div>
-
-    <div class="text-muted small mt-1">{{ $reply->created_at->diffForHumans() }}</div>
+       <!-- Replies Section -->
+<div id="replies-{{ $comment->id }}" class="mt-3 ms-3" style="display: none;">
+    @if($comment->replies->count())
+        @foreach($comment->replies as $reply)
+            @include('components.reply', ['reply' => $reply])
+        @endforeach
+    @else
+        <div>No replies yet.</div>
+    @endif
 </div>
-
-                @endforeach
-            @else
-                <div>No replies yet.</div>
-            @endif
-        </div>
 
     </div>
     @endforeach
@@ -357,22 +331,38 @@ function toggleReplyForm(commentId) {
 }
 
 
-function toggleReplies(commentId) {
-    const repliesSection = document.getElementById('replies-' + commentId);
-    repliesSection.style.display = repliesSection.style.display === 'none' ? 'block' : 'none';
+function toggleReplies(replyId, btn = null) {
+    // Find the section with replies under the current reply
+    const repliesSection = document.getElementById('replies-' + replyId);
+
+    if (repliesSection) {
+        const isHidden = repliesSection.style.display === 'none';
+        repliesSection.style.display = isHidden ? 'block' : 'none';
+
+        if (btn) {
+            // Change the button text to show/hide replies
+            const count = repliesSection.children.length;
+            btn.textContent = isHidden
+                ? `Hide Replies (${count})`
+                : `Show Replies (${count})`;
+        }
+    }
 }
+
 
 function openEditModal(commentId, body, isReply = false) {
     const form = document.getElementById('editCommentForm');
     const actionUrl = isReply
-        ? `/reply/${commentId}/edit` // Your actual reply update route
-        : `/comment/${commentId}/edit`; // Your actual comment update route
+        ? `/reply/${commentId}/edit` // for reply update
+        : `/comment/update/${commentId}`; // fixed top-level comment update
 
     form.action = actionUrl;
     document.getElementById('editCommentBody').value = body;
+
     const modal = new bootstrap.Modal(document.getElementById('editCommentModal'));
     modal.show();
 }
+
 
 </script>
 

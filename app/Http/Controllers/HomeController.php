@@ -37,10 +37,21 @@ class HomeController extends Controller
   }
 
   public function post_details($id)
-  {
-    $post = Post::with(['comments.replies', 'comments.user'])->findOrFail($id);
-    return view('home.post_details',compact('post'));
-  }
+{
+    $post = Post::findOrFail($id);
+
+    $comments = Comment::with([
+        'user',
+        'replies.user',
+        'replies.replies.user',
+    ])->where('post_id', $post->id)
+      ->whereNull('parent_id')
+      ->latest()
+      ->get();
+
+    return view('home.post_details', compact('post', 'comments'));
+}
+
 
   public function create_post()
   {
@@ -249,7 +260,7 @@ public function updateReply(Request $request, $id)
     $reply->body = $request->input('body');
     $reply->save();
 
-    return redirect()->back()->with('comment_message', 'Reply updated successfully!');
+    return redirect()->back()->with('comment_message', 'Reply updated successfully!')->withFragment('comment-section');
 }
 
 public function destroyReply($id)
@@ -262,7 +273,7 @@ public function destroyReply($id)
 
     $reply->delete();
 
-    return redirect()->back()->with('comment_message', 'Reply deleted successfully!');
+    return redirect()->back()->with('comment_message', 'Reply deleted successfully!')->withFragment('comment-section');
 }
 
 }

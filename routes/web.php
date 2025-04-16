@@ -79,9 +79,9 @@ Route::put('/comment/update/{id}', [HomeController::class, 'updateComment'])->na
 
 Route::post('/comment/{comment}/reply', [HomeController::class, 'storeReply'])->middleware('auth')->name('post.comment.reply');
 
-Route::put('/reply/{reply}/edit', [CommentController::class, 'updateReply'])->name('reply.update');
+Route::put('/reply/{reply}/edit', [HomeController::class, 'updateReply'])->name('reply.update');
 
-Route::delete('/reply/{reply}', [CommentController::class, 'destroyReply'])->name('comment.reply.delete');
+Route::delete('/reply/{reply}', [HomeController::class, 'destroyReply'])->name('comment.reply.delete');
 
 Route::get('/about', [HomeController::class, 'about'])->name('about.page');
 
