@@ -123,7 +123,11 @@
         <div class="text-center">
           <img src="/postimage/{{$post->image}}" class="post-image" alt="Post Image">
           <h4 style="font-size: 1.5rem; font-weight: bold;">{{$post->title}}</h4>
-          <p>Post by <b>{{$post->name}}</b></p>
+          <p class="text-muted mb-1">
+           Post by <b>{{ $post->name }}</b>
+           <span style="margin-left: 30px; margin-right: 30px;">|</span>
+           <span>👁️ {{ $post->views }} views</span>
+           </p>
         </div>
 
         <!-- Description + Comment Section -->

@@ -276,4 +276,15 @@ public function destroyReply($id)
     return redirect()->back()->with('comment_message', 'Reply deleted successfully!')->withFragment('comment-section');
 }
 
+public function increase_view($id)
+{
+    $post = Post::find($id);
+    if ($post) {
+        $post->increment('views');
+        return response()->json(['success' => true]);
+    }
+
+    return response()->json(['success' => false], 404);
+}
+
 }

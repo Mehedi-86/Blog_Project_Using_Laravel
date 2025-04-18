@@ -87,5 +87,7 @@ Route::get('/about', [HomeController::class, 'about'])->name('about.page');
 
 Route::get('/blog', [HomeController::class, 'blog'])->name('blog.page');
 
+Route::post('/increase-view/{id}', [HomeController::class, 'increase_view']);
+
 
 
