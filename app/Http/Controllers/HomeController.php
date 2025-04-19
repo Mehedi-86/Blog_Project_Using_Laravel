@@ -9,6 +9,7 @@ use App\Models\Post;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\Like;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
@@ -285,6 +286,40 @@ public function increase_view($id)
     }
 
     return response()->json(['success' => false], 404);
+}
+
+public function profile($id)
+{
+    $user = User::findOrFail($id);
+    $comments = Comment::where('user_id', $id)->latest()->get();
+    $likedPosts = $user->likedPosts()->latest()->get(); // Assumes relationship exists
+
+    return view('home.profile', compact('user', 'comments', 'likedPosts'));
+}
+
+public function showPictureForm()
+{
+    return view('home.profile_picture_upload');
+}
+
+public function updatePicture(Request $request)
+{
+    $request->validate([
+        'profile_picture' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+    ]);
+
+    $user = auth()->user();
+
+    if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
+        Storage::disk('public')->delete($user->profile_picture);
+    }
+
+    $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+
+    $user->profile_picture = $path;
+    $user->save();
+
+    return redirect()->route('user.profile', ['id' => $user->id])->with('success', 'Profile picture updated!');
 }
 
 }

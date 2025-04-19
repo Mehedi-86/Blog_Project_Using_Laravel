@@ -27,7 +27,7 @@
                </nav>
             </div>
             <div class="container-fluid">
-               <div class="logo"><a href="index.html"><img src="images/logo.png"></a></div>
+            <div class="logo"><a href="{{ route('home') }}"><img src="{{ asset('images/logo.png') }}" alt="Logo"></a></div>
                <div class="menu_main">
                   <ul>
                     <li>
@@ -47,6 +47,8 @@
                      
                     <li> <x-app-layout> </x-app-layout> </li>
 
+                    <li><a href="{{ route('user.profile', Auth::id()) }}">My Profile</a></li>
+                    
                     <li><a href="{{url('my_post')}}">My Post</a></li>
     
                     <li><a href="{{url('create_post')}}">Create Post</a></li>

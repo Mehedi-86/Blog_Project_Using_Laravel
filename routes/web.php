@@ -89,5 +89,10 @@ Route::get('/blog', [HomeController::class, 'blog'])->name('blog.page');
 
 Route::post('/increase-view/{id}', [HomeController::class, 'increase_view']);
 
+Route::get('/profile/{id}', [HomeController::class, 'profile'])->name('user.profile');
+
+Route::get('/profile/picture', [HomeController::class, 'showPictureForm'])->name('profile.picture.form');
+
+Route::post('/profile/picture', [HomeController::class, 'updatePicture'])->name('profile.picture.update');
 
 
