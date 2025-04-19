@@ -88,6 +88,11 @@
                 @csrf
                 <input type="file" name="profile_picture" id="profile_picture_input" accept="image/*" capture="user" style="display: none;" onchange="document.getElementById('uploadForm').submit();">
 
+                {{-- Show validation error message for profile picture --}}
+                @error('profile_picture')
+                    <div id="error_message" class="text-danger mt-1">{{ $message }}</div>
+                @enderror
+
                 {{-- Show "Add" if no profile picture --}}
                 @if (!$user->profile_picture)
                     <button type="button" class="btn btn-primary me-2" onclick="document.getElementById('profile_picture_input').click();">Add Profile Picture</button>
@@ -117,7 +122,7 @@
 
     {{-- Comments --}}
     <div class="mb-4">
-        <h4 class="section-title">Comments</h4>
+        <h4 class="section-title">Comment On Posts</h4>
         @forelse($comments as $comment)
             <div class="card p-3 mb-2">
                 <p>{{ $comment->content }}</p>
@@ -128,5 +133,17 @@
         @endforelse
     </div>
 </div>
+
+{{-- JavaScript to hide error message after 3 seconds --}}
+<script>
+    @if ($errors->has('profile_picture'))
+        setTimeout(function() {
+            const errorMessage = document.getElementById('error_message');
+            if (errorMessage) {
+                errorMessage.style.display = 'none';
+            }
+        }, 5000); // 5000ms = 5 seconds
+    @endif
+</script>
 
 @endsection

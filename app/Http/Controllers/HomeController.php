@@ -304,9 +304,11 @@ public function showPictureForm()
 
 public function updatePicture(Request $request)
 {
-    $request->validate([
-        'profile_picture' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-    ]);
+       $request->validate([
+       'profile_picture' => 'required|image|mimes:jpeg,png,jpg|max:5120',
+       ], [
+       'profile_picture.max' => 'Maximum size should be 5MB',
+       ]);
 
     $user = auth()->user();
 
