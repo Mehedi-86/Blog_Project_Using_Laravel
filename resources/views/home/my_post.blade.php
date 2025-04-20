@@ -7,14 +7,23 @@
       <style>
         .post_deg
         {
-            padding: 30px;
+            padding-top: 200px;
             text-align: center;
-            background-color: black;
+            background-color: #2C3E50;
+            padding-bottom: 30px;
         }
 
         .title_deg
         {
-         font-size: 30px;
+         font-size: 25px;
+         font-weight:bold;
+         padding: 15px;
+         color: white;
+        }
+
+        .heading_deg
+        {
+         font-size: 35px;
          font-weight:bold;
          padding: 15px;
          color: white;
@@ -45,6 +54,8 @@
          
        @include('home.header')
 
+      </div>
+
        @if(session()->has('message'))
          <div class ="alert alert-success">
            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
@@ -55,6 +66,7 @@
        @foreach($data as $data)
        
          <div class ="post_deg">
+         <h1 class="heading_deg">My Post</h1>
             <img class="img_deg" src="/postimage/{{$data->image}}">
             <h4 class="title_deg">{{$data->title}}</h4>
             <a onclick="return confirm('Are you sure to delete this?')" href="{{url('my_post_del',$data->id)}}" class="btn btn-danger">Delete</a>

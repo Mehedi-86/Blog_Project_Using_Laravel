@@ -9,7 +9,8 @@
         .div_deg
         {
             text-align: center;
-            background-color: black;
+            background-color: #2C3E50;
+            padding-top: 200px;           
         }
 
         .img_deg
@@ -46,17 +47,19 @@
    <body>
       <!-- header section start -->
       <div class="header_section">
-         
+
        @include('home.header')
+
+      </div>
 
        <div class="div_deg">
 
-       @if(session()->has('message'))
-         <div class ="alert alert-success">
-           <button type="button" class="close" data-dismiss="alert" aria-hidden="true">x</button>
-           {{session()->get('message')}}
-         </div>
-       @endif
+         @if(session()->has('message'))
+          <div class="alert alert-success alert-dismissible fade show" style="font-size: 1.25rem; padding: 20px;">
+           <button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="position: absolute; top: 10px; right: 10px; font-size: 2rem; padding: 5px 10px;">&times;</button>
+           {{ session()->get('message') }}
+          </div>
+         @endif
 
          <h1 class="title_deg">Update Post</h1>
 
@@ -92,7 +95,6 @@
 
       </div>
       
-
        @include('home.footer')
       </body>
 </html>

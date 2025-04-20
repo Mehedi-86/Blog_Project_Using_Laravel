@@ -101,7 +101,7 @@ class HomeController extends Controller
   {
     $data = Post::find($id);
     $data->delete();
-    return redirect()->back()->with('message','Post Deleed Successfully');
+    return redirect()->back()->with('message','Post Deleted Successfully');
   }
 
   public function post_update_page($id)
