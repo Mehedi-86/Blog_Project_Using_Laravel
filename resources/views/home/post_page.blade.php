@@ -9,8 +9,9 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #2C3E50;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: #fff;
         }
 
         .div_deg {
@@ -18,17 +19,19 @@
             margin: 0 auto;
             margin-top: 10px;
             padding: 50px 20px 20px;
-            background-color: #34495E;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
             text-align: left;
         }
 
         .title_deg {
             text-align: center;
-            font-size: 36px;
+            font-size: 34px;
             font-weight: bold;
-            color: white;
+            color: #ffffff;
         }
 
         .input_deg {
@@ -38,25 +41,28 @@
         label {
             font-size: 18px;
             font-weight: bold;
-            color: #ECF0F1;
+            color: #f1f1f1;
             display: block;
             margin-bottom: 8px;
         }
 
         input[type="text"],
-        textarea,
-        input[type="file"] {
+        input[type="file"],
+        textarea {
             width: 100%;
             padding: 12px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+            border-radius: 10px;
+            border: none;
             box-sizing: border-box;
             font-size: 16px;
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #fff;
         }
 
         textarea {
             resize: vertical;
             min-height: 120px;
+            color: #000;
         }
 
         .img_deg {
@@ -83,8 +89,7 @@
             background-color: #16A085;
         }
 
-        .alert.full_width 
-        {
+        .alert.full_width {
            width: 100%;
            margin: 0;
            border-radius: 0;
@@ -94,8 +99,7 @@
            padding: 4px 2.5rem 4px 15px;
        }
 
-       .alert.full_width .close 
-       {
+       .alert.full_width .close {
            position: absolute;
            right: 10px;
            top: 50%;
@@ -103,13 +107,25 @@
            font-size: 2.5rem;
        }
 
-       .btn.btn-primary 
-       {
+       .btn.btn-primary {
         font-size: 18px;
         padding: 5px 10px;
         border-radius: 6px;
         transition: background-color 0.3s ease;
        }
+
+       #description 
+       {
+        background-color: rgba(255, 255, 255, 0.9) !important;
+        color: #000 !important;
+       }
+
+       .header_section 
+       {
+        margin-bottom: 10px; 
+       }
+
+
     </style>
 </head>
 <body>
@@ -128,13 +144,10 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-@endif
-
+    @endif
 
     <!-- Form container -->
     <div class="div_deg">
-
-
         <form action="{{ url('update_post_data', $data->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
 
@@ -145,7 +158,7 @@
 
             <div class="input_deg">
                 <label for="description">Description</label>
-                <textarea name="description" id="description">{{ $data->description }}</textarea>
+                <textarea name="description" id="description">{!! $data->description !!}</textarea>
             </div>
 
             <div class="input_deg">
