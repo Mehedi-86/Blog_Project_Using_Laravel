@@ -139,17 +139,17 @@ class HomeController extends Controller
     $image=$request->image;
 
     if($image)
-{
-  // Delete old image
-  if ($data->image && file_exists(public_path('postimage/' . $data->image))) {
+   {
+     // Delete old image
+    if ($data->image && file_exists(public_path('postimage/' . $data->image))) {
       unlink(public_path('postimage/' . $data->image));
-  }
+   }
 
-  // Save new image
-  $imagename = uniqid() . '.' . $image->getClientOriginalExtension();
-  $request->image->move('postimage', $imagename);
-  $data->image = $imagename;
-}
+    // Save new image
+    $imagename = uniqid() . '.' . $image->getClientOriginalExtension();
+    $request->image->move('postimage', $imagename);
+    $data->image = $imagename;
+   }
 
     $data->save();
     return redirect()->back()->with('message','Post Updated Successfully');

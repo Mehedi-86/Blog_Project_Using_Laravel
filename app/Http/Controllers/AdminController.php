@@ -62,9 +62,9 @@ class AdminController extends Controller
             }
         }        
 
-$post->delete();
-return redirect()->back()->with('message','Post Deleted Successfully');
- }
+      $post->delete();
+      return redirect()->back()->with('message','Post Deleted Successfully');
+    }
 
     public function edit_page($id)
     {
@@ -74,14 +74,14 @@ return redirect()->back()->with('message','Post Deleted Successfully');
 
     public function update_post(Request $request, $id)
    {
-    $data = Post::find($id);
-    $data->title = $request->title;
-    $data->description = $request->description;
+     $data = Post::find($id);
+     $data->title = $request->title;
+     $data->description = $request->description;
 
-    $oldImage = $data->image; // Get the old image file name
+     $oldImage = $data->image; // Get the old image file name
 
-    $image = $request->image;
-    if ($image) {
+     $image = $request->image;
+     if ($image) {
         $imagename = time().'.'.$image->getClientOriginalExtension();
         $request->image->move('postimage', $imagename);
         $data->image = $imagename;
@@ -93,10 +93,10 @@ return redirect()->back()->with('message','Post Deleted Successfully');
                 unlink($oldImagePath);
             }
         }
-    }
+     }
 
-    $data->save();
-    return redirect()->back()->with('message', 'Post Updated Successfully');
+      $data->save();
+      return redirect()->back()->with('message', 'Post Updated Successfully');
     }
 
     public function accept_post($id)
