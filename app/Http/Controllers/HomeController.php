@@ -60,7 +60,13 @@ class HomeController extends Controller
   }
 
   public function user_post(Request $request)
-  {  
+  { 
+    $request->validate([
+      'title' => 'required|string|max:255',
+      'description' => 'required|string',
+      'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
+  ]); 
+
     $user=Auth()->user();
     $userid=$user->id;
     $username=$user->name;
@@ -98,11 +104,20 @@ class HomeController extends Controller
   }
 
   public function my_post_del($id)
-  {
+{
     $data = Post::find($id);
+
+    if (!empty($data->image)) {
+        $imagePath = public_path('postimage/' . $data->image);
+        if (file_exists($imagePath)) {
+            unlink($imagePath);
+        }
+    }
+
     $data->delete();
-    return redirect()->back()->with('message','Post Deleted Successfully');
-  }
+
+    return redirect()->back()->with('message', 'Post Deleted Successfully');
+}
 
   public function post_update_page($id)
   { 
@@ -111,18 +126,31 @@ class HomeController extends Controller
   }
 
   public function update_post_data(Request $request, $id)
-  {
+  { 
+    $request->validate([
+      'title' => 'required|string|max:255',
+      'description' => 'required|string',
+      'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
+  ]); 
+
     $data=Post::find($id);
     $data->title=$request->title;
     $data->description=$request->description;
     $image=$request->image;
 
     if($image)
-    {
-      $imagename=time().'.'.$image->getClientOriginalExtension();
-      $request->image->move('postimage',$imagename);
-      $data->image=$imagename;
-    }
+{
+  // Delete old image
+  if ($data->image && file_exists(public_path('postimage/' . $data->image))) {
+      unlink(public_path('postimage/' . $data->image));
+  }
+
+  // Save new image
+  $imagename = uniqid() . '.' . $image->getClientOriginalExtension();
+  $request->image->move('postimage', $imagename);
+  $data->image = $imagename;
+}
+
     $data->save();
     return redirect()->back()->with('message','Post Updated Successfully');
   }

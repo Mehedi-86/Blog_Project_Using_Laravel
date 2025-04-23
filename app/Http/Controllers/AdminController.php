@@ -53,9 +53,18 @@ class AdminController extends Controller
     public function delete_post($id)
     {
         $post = Post::find($id);
-        $post->delete();
-        return redirect()->back()->with('message','Post Deleted Successfully');
-    }
+
+
+        if (!empty($post->image)) {
+            $imagePath = public_path('postimage/' . $post->image);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }        
+
+$post->delete();
+return redirect()->back()->with('message','Post Deleted Successfully');
+ }
 
     public function edit_page($id)
     {
