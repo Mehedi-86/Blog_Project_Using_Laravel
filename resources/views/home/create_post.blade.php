@@ -118,6 +118,66 @@
                 font-size: 2.2rem;
             }
         }
+
+        /* Wrapper for the custom select */
+    .custom-select-wrapper {
+        position: relative;
+        width: 100%;
+    }
+
+    /* Style the main select box */
+    .custom-select {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .custom-select:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .dropdown-icon {
+        width: 20px;
+        height: 20px;
+        transition: transform 0.3s ease;
+    }
+
+    .dropdown-options {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+        z-index: 10;
+    }
+
+    .dropdown-option {
+        padding: 12px;
+        background-color: rgba(255, 255, 255, 0.15);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .dropdown-option:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* Show the options when the select box is active */
+    .dropdown-options.show {
+        display: block;
+    }
     </style>
 
     <!-- Optional Google Font -->
@@ -156,6 +216,22 @@
                 </div>
 
                 <div class="field_deg">
+                 <label for="category" style="color: #fff;">Select Category</label>
+                   <div class="custom-select-wrapper">
+                     <div class="custom-select" id="customSelect">
+                      <span id="selectedCategory">Choose a category</span>
+                      <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
+                     </div>
+                     <div class="dropdown-options" id="dropdownOptions">
+                      @foreach ($categories as $category)
+                       <div class="dropdown-option" data-value="{{ $category->id }}">{{ $category->name }}</div>
+                      @endforeach
+                     </div>
+                      <input type="hidden" name="category_id" id="category_id">
+                   </div>
+                </div>
+
+                <div class="field_deg">
                   <input type="submit" class="submit-btn" value="Add Post">
                 </div>
             </form>
@@ -177,6 +253,39 @@
             editor.on('change', function () {
                 editor.save();
             });
+        }
+    });
+</script>
+
+<script>
+    // Toggle dropdown visibility on click
+    const customSelect = document.getElementById('customSelect');
+    const dropdownOptions = document.getElementById('dropdownOptions');
+    const selectedCategory = document.getElementById('selectedCategory');
+    const categoryInput = document.getElementById('category_id');
+
+    customSelect.addEventListener('click', () => {
+        dropdownOptions.classList.toggle('show');
+        const icon = document.querySelector('.dropdown-icon');
+        icon.style.transform = dropdownOptions.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
+    });
+
+    // Handle category selection
+    const dropdownItems = document.querySelectorAll('.dropdown-option');
+    dropdownItems.forEach(item => {
+        item.addEventListener('click', () => {
+            selectedCategory.textContent = item.textContent;
+            categoryInput.value = item.getAttribute('data-value');
+            dropdownOptions.classList.remove('show');
+            document.querySelector('.dropdown-icon').style.transform = 'rotate(0deg)';
+        });
+    });
+
+    // Close dropdown if clicked outside
+    window.addEventListener('click', (e) => {
+        if (!customSelect.contains(e.target)) {
+            dropdownOptions.classList.remove('show');
+            document.querySelector('.dropdown-icon').style.transform = 'rotate(0deg)';
         }
     });
 </script>

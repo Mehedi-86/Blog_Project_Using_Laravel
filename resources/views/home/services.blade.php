@@ -12,7 +12,7 @@
                     <div>
                         <img src="/postimage/{{ $post->image }}" class="services_img" style="margin-bottom: 20px; width: 100%; height: 200px; object-fit: cover;">
                     </div>
-                    <h4>{{ $post->title }}</h4>
+                    <h4 style="font-weight: bold; font-size: 1.5rem;">{{ $post->title }}</h4>
                     <p class="text-muted mb-1">
                         Post by <b>{{ $post->name }}</b>
                         <span style="margin-left: 40px; margin-right: 40px;">|</span>

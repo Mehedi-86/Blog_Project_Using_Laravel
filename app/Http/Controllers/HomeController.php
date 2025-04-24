@@ -10,6 +10,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\Like;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Category;
 
 class HomeController extends Controller
 {
@@ -56,7 +57,8 @@ class HomeController extends Controller
 
   public function create_post()
   {
-    return view('home.create_post');
+    $categories = Category::all();
+    return view('home.create_post',  compact('categories'));
   }
 
   public function user_post(Request $request)
@@ -65,6 +67,7 @@ class HomeController extends Controller
       'title' => 'required|string|max:255',
       'description' => 'required|string',
       'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
+      'category_id' => 'required|exists:categories,id',
   ]); 
 
     $user=Auth()->user();
@@ -79,6 +82,7 @@ class HomeController extends Controller
     $post->name= $username;
     $post->usertype= $usertype;
     $post->post_staus= 'pending';
+    $post->category_id = $request->category_id;
 
     $image= $request->image;
     if($image)
@@ -122,7 +126,9 @@ class HomeController extends Controller
   public function post_update_page($id)
   { 
     $data=Post::find($id);
-    return view('home.post_page',compact('data'));
+    $categories = Category::all();
+
+    return view('home.post_page', compact('data', 'categories'));
   }
 
   public function update_post_data(Request $request, $id)
@@ -137,6 +143,7 @@ class HomeController extends Controller
     $data->title=$request->title;
     $data->description=$request->description;
     $image=$request->image;
+    $data->category_id = $request->category_id;
 
     if($image)
    {

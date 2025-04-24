@@ -125,6 +125,51 @@
         margin-bottom: 10px; 
        }
 
+       .custom-select-wrapper {
+    position: relative;
+    user-select: none;
+}
+
+.custom-select {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.dropdown-options {
+    display: none;
+    position: absolute;
+    width: 100%;
+    top: 100%;
+    left: 0;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 999;
+}
+
+.dropdown-options.show {
+    display: block;
+}
+
+.dropdown-option {
+    padding: 10px 12px;
+    cursor: pointer;
+}
+
+.dropdown-option:hover {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
+.dropdown-icon {
+    fill: #fff;
+}
 
     </style>
 </head>
@@ -171,6 +216,31 @@
                 <input type="file" name="image" id="image">
             </div>
 
+            <div class="input_deg">
+              <label for="category" style="color: #fff;">Update Category</label>
+                 <div class="custom-select-wrapper">
+                     <div class="custom-select" id="customSelect">
+                          <span id="selectedCategory">
+                            {{ $categories->firstWhere('id', $data->category_id)->name ?? 'Choose a category' }}
+                          </span>
+                          <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
+                     </div>
+                     <div class="dropdown-options" id="dropdownOptions">
+                     @foreach ($categories as $category)
+                       <div 
+                         class="dropdown-option" 
+                           data-value="{{ $category->id }}"
+                           @if ($category->id == $data->category_id) style="background-color: rgba(255,255,255,0.2);" @endif
+                            >
+                           {{ $category->name }}
+                        </div>
+                     @endforeach
+                     </div>
+                   <input type="hidden" name="category_id" id="category_id" value="{{ $data->category_id }}">
+                 </div>
+            </div>
+
+
             <div class="input_deg" style="text-align: center;">
               <input type="submit" value="Update" class="btn btn-primary" style="background-color: #007bff; border-color: white; color: white;">
             </div>
@@ -180,6 +250,51 @@
 
     <!-- footer section -->
     @include('home.footer')
+
+    <script>
+    document.addEventListener("DOMContentLoaded", () => {
+    const select = document.getElementById("customSelect");
+    const options = document.getElementById("dropdownOptions");
+    const hiddenInput = document.getElementById("category_id");
+    const selectedText = document.getElementById("selectedCategory");
+
+    // Preselect current category
+    const currentValue = hiddenInput.value;
+    if (currentValue) {
+        const preselectedOption = document.querySelector(`.dropdown-option[data-value='${currentValue}']`);
+        if (preselectedOption) {
+            selectedText.textContent = preselectedOption.textContent;
+            preselectedOption.style.backgroundColor = "rgba(255,255,255,0.2)";
+        }
+    }
+
+    // Toggle dropdown
+    select.addEventListener("click", () => {
+        options.classList.toggle("show");
+    });
+
+    // Select an option
+    document.querySelectorAll(".dropdown-option").forEach(option => {
+        option.addEventListener("click", () => {
+            selectedText.textContent = option.textContent;
+            hiddenInput.value = option.getAttribute("data-value");
+
+            // Highlight selected
+            document.querySelectorAll(".dropdown-option").forEach(opt => opt.style.backgroundColor = "");
+            option.style.backgroundColor = "rgba(255,255,255,0.2)";
+            
+            options.classList.remove("show");
+        });
+    });
+
+    // Close on outside click
+    document.addEventListener("click", e => {
+        if (!select.contains(e.target) && !options.contains(e.target)) {
+            options.classList.remove("show");
+        }
+    });
+});
+</script>
 
 </body>
 </html>
