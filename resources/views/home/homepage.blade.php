@@ -22,8 +22,8 @@
 
 
       <!-- services section start -->
-      
-       @include('home.services')
+
+@include('home.services', ['post' => $post, 'categories' => $categories, 'selectedCategory' => $selectedCategory])
 
       <!-- services section end -->
 

@@ -14,29 +14,28 @@ use App\Models\Category;
 
 class HomeController extends Controller
 {
-    public function index()
-    {
-        if (Auth::check()) {
+    
+public function homepage(Request $request)
+{
+    $selectedCategory = $request->query('category');
 
-            $post=Post::where('post_staus','=','active')->get();
-
-            $usertype = Auth::user()->usertype;
-
-            if ($usertype == 'admin') {
-                return view('admin.adminhome'); // Ensure you have 'admin/home.blade.php'
-            } else {
-                return view('home.homepage',compact('post'));
-            }
-        }
-
-        return redirect()->route('login');
+    if ($selectedCategory) {
+        $category = Category::where('name', $selectedCategory)->first();
+        $post = $category
+            ? Post::where('category_id', $category->id)
+                    ->where('post_staus', 'active')
+                    ->latest()
+                    ->get()
+            : collect();
+    } else {
+        $post = Post::where('post_staus', 'active')->latest()->get();
     }
 
-    public function homepage()
-  {
-    $post = Post::where('post_staus','=','active')->get();
-    return view('home.homepage',compact('post')); 
-  }
+    $categories = Category::all();
+
+    return view('home.homepage', compact('post', 'categories', 'selectedCategory'));
+}
+
 
   public function post_details($id)
 {

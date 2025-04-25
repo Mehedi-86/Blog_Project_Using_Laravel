@@ -34,7 +34,7 @@ Route::middleware([
 });
 
 // Home Route for Authenticated Users (redirect based on user type)
-Route::get('/home', [HomeController::class, 'index'])->middleware('auth')->name('home');
+Route::get('/home', [HomeController::class, 'homepage'])->middleware('auth')->name('home');
 
 // Admin Routes 
 Route::get('/post_page', [AdminController::class, 'post_page']);
