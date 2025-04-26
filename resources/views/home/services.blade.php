@@ -30,22 +30,26 @@
             </div>
         </form>
 
-        <!-- Blog Posts Section -->
-        <div class="services_section_2" style="margin-top: 20px;">
+            <!-- Blog Posts Section -->
+        <div class="services_section_2" style="margin-top: 40px;">
             <div class="row">
                 @foreach($post as $post)
-                <div class="col-md-4" style="padding:30px">
-                    <div>
-                        <img src="/postimage/{{ $post->image }}" class="services_img" style="margin-bottom: 20px; width: 100%; height: 200px; object-fit: cover;">
-                    </div>
-                    <h4 style="font-weight: bold; font-size: 1.5rem;">{{ $post->title }}</h4>
-                    <p class="text-muted mb-1">
-                        Post by <b>{{ $post->name }}</b>
-                        <span style="margin-left: 40px; margin-right: 40px;">|</span>
-                        <span>👁️ {{ $post->views }} views</span>
-                    </p>
-                    <div class="btn_main">
-                        <a href="#" class="read-more" data-post-id="{{ $post->id }}" data-href="{{ url('post_details', $post->id) }}">Read more</a>
+                <div class="col-md-4 mb-4">
+                    <div class="blog-card h-100 d-flex flex-column">
+                        <div class="blog-card-image">
+                            <img src="/postimage/{{ $post->image }}" alt="{{ $post->title }}" class="services_img">
+                        </div>
+                        <div class="blog-card-body">
+                            <h4 class="blog-card-title">{{ $post->title }}</h4>
+                            <p class="text-muted mb-1">
+                            Post by <b>{{ $post->name }}</b>
+                            <span style="margin-left: 10px; margin-right: 10px;">|</span>
+                            <span>👁️ {{ $post->views }} views</span>
+                            </p>
+                            <div class="btn_main mt-auto">
+                                <a href="#" class="read-more" data-post-id="{{ $post->id }}" data-href="{{ url('post_details', $post->id) }}">Read more</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 @endforeach
@@ -59,7 +63,7 @@
     .custom-select-wrapper {
         position: relative;
         width: 100%;
-        font-family: 'Segoe UI', sans-serif;
+        font-family: 'Poppins','Segoe UI', sans-serif;
     }
 
     .custom-select {
@@ -95,26 +99,36 @@
 
     .dropdown-options {
         position: absolute;
-        top: calc(100% + 5px);
+        top: calc(100% + 6px);
         left: 0;
         width: 100%;
-        background: white;
-        border: 2px solid rgba(25, 42, 86, 0.4);
-        border-radius: 0 0 12px 12px;
-        display: none;
-        z-index: 10;
-        max-height: 240px;
+        background: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(0,0,0,0.1);
+        box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+        max-height: 260px;
         overflow-y: auto;
-        box-shadow: 0 12px 22px rgba(0, 0, 0, 0.15);
-        animation: fadeIn 0.3s ease-in-out;
+        z-index: 10;
+    }
+
+    .custom-select.active + .dropdown-options {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
     }
 
     .dropdown-option {
         padding: 14px 20px;
-        cursor: pointer;
-        transition: all 0.2s ease-in-out;
         font-weight: 500;
         color: #2f3640;
+        background: #ffffff;
+        cursor: pointer;
+        transition: background 0.2s ease-in-out;
     }
 
     .dropdown-option:hover,
@@ -143,6 +157,85 @@
             transform: translateY(0);
         }
     }
+    
+    .blog-card {
+        background: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+        height: 100%;
+    }
+
+    .blog-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    }
+
+    .blog-card-image img {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+
+    .blog-card:hover .blog-card-image img {
+        transform: scale(1.05);
+    }
+
+    .blog-card-body {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .blog-card-title {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 12px;
+        color: #0a3d62;
+    }
+
+    .blog-card-meta {
+        font-size: 0.95rem;
+        color: #778ca3;
+        margin-bottom: 20px;
+    }
+
+    .read-more {
+        margin-top: auto;
+        display: inline-block;
+        background: #0a3d62;
+        color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background 0.3s ease;
+    }
+
+    .read-more:hover {
+        background: #074078;
+    }
+
+    .services_taital {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #0a3d62;
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .services_text {
+        color: #636e72;
+        font-size: 1rem;
+        margin: 0 auto 30px;
+        text-align: left;
+    }
+
 </style>
 
 <!-- Scripts -->

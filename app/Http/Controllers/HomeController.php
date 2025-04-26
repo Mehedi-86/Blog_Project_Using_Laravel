@@ -98,13 +98,34 @@ public function homepage(Request $request)
     return redirect()->back();
   }
 
-  public function my_post()
-  { 
-    $user=Auth::user();
-    $userid=$user->id;
-    $data = Post::where('user_id', $userid)->get();
-    return view('home.my_post',compact('data'));
-  }
+  public function my_post(Request $request)
+{ 
+    $user = Auth::user();
+    $userid = $user->id;
+
+    $category = $request->input('category');
+
+    if ($category) {
+
+        $category = Category::where('name', $category)->first();
+
+        if ($category) {
+            $data = Post::where('user_id', $userid)
+                        ->where('category_id', $category->id) 
+                        ->get();
+        } else {
+            $data = collect(); 
+        }
+    } else {
+       
+        $data = Post::where('user_id', $userid)->get();
+    }
+
+    $categories = Category::all(); 
+
+    return view('home.my_post', compact('data', 'categories'));
+}
+
 
   public function my_post_del($id)
 {
