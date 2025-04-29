@@ -6,8 +6,11 @@
         </p>
 
         <!-- Custom Dropdown Form -->
-        <form method="GET" action="{{ url('/') }}" class="mb-2 text-center">
-            <div class="custom-select-wrapper mx-auto" style="max-width: 300px;">
+        <form method="GET" action="{{ url('/') }}" class="mb-2">
+    <div class="row justify-content-center align-items-center">
+        <!-- Category Dropdown -->
+        <div class="col-auto">
+            <div class="custom-select-wrapper">
                 <div class="custom-select" id="customSelect">
                     <span id="selectedCategory">
                         {{ $selectedCategory ?? 'Choose a category' }}
@@ -19,16 +22,29 @@
                 <div class="dropdown-options" id="dropdownOptions">
                     <div class="dropdown-option {{ $selectedCategory == '' ? 'active' : '' }}" data-value="">All</div>
                     @foreach ($categories as $category)
-                        <div 
-                            class="dropdown-option {{ $selectedCategory == $category->name ? 'active' : '' }}" 
-                            data-value="{{ $category->name }}">
+                        <div class="dropdown-option {{ $selectedCategory == $category->name ? 'active' : '' }}" data-value="{{ $category->name }}">
                             {{ $category->name }}
                         </div>
                     @endforeach
                 </div>
                 <input type="hidden" name="category" id="categoryInput" value="{{ $selectedCategory }}">
             </div>
-        </form>
+        </div>
+
+        <!-- Search Input and Button -->
+        <div class="col-auto">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control search-input" placeholder="Search posts...  🔍" value="{{ $searchTerm ?? '' }}">
+                <div class="input-group-append">
+                <button type="submit" class="search-button">
+                  <i class="fa fa-search"></i> <span class="search-text ml-2">Search</span>
+                </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
 
             <!-- Blog Posts Section -->
         <div class="services_section_2" style="margin-top: 40px;">
@@ -62,7 +78,7 @@
 <style>
     .custom-select-wrapper {
         position: relative;
-        width: 100%;
+        width: 300px;
         font-family: 'Poppins','Segoe UI', sans-serif;
     }
 
@@ -234,6 +250,80 @@
         font-size: 1rem;
         margin: 0 auto 30px;
         text-align: left;
+    }
+
+     /* Search Icon inside input */
+
+    .search-text {
+        font-weight: bold;
+    }
+
+    .search-input {
+        border-radius: 30px;
+        padding-left: 50px; 
+        padding-right: 40px; 
+        font-size: 16px;
+        transition: all 0.3s ease-in-out;
+        width: 100%;
+    }
+
+    .search-input::placeholder {
+        color: #aaa;
+    }
+
+    /* Search Button Style */
+    .search-button {
+        border-radius: 30px;
+        padding: 7px 25px; /* Wider padding */
+        font-size: 16px;
+        background-color: #007bff;
+        color: #fff;
+        border: 2px solid #555555;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease-in-out;
+        white-space: nowrap; /* Prevents text wrapping */
+    }
+
+    .search-button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Search Button Icon */
+    .search-button i {
+        margin-left: 5px;
+    }
+
+    .input-group .input-group-prepend,
+    .input-group .input-group-append {
+        border: none;
+    }
+
+    .input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .input-group .search-button {
+        margin-left: 10px;
+    }
+
+    .input-group .search-input {
+        flex-grow: 1;
+    }
+
+    /* Hover Effects on Input */
+    .search-input:focus {
+        box-shadow: 0 0 8px rgba(0, 123, 255, 0.6);
+        border-color: #007bff;
+    }
+
+    /* Small tweaks for alignment and spacing */
+    .col-md-8 {
+        padding-right: 0;
     }
 
 </style>

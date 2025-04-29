@@ -15,26 +15,39 @@ use App\Models\Category;
 class HomeController extends Controller
 {
     
-public function homepage(Request $request)
-{
-    $selectedCategory = $request->query('category');
-
-    if ($selectedCategory) {
-        $category = Category::where('name', $selectedCategory)->first();
-        $post = $category
-            ? Post::where('category_id', $category->id)
-                    ->where('post_staus', 'active')
-                    ->latest()
-                    ->get()
-            : collect();
-    } else {
-        $post = Post::where('post_staus', 'active')->latest()->get();
-    }
-
-    $categories = Category::all();
-
-    return view('home.homepage', compact('post', 'categories', 'selectedCategory'));
-}
+    public function homepage(Request $request)
+    {
+        $selectedCategory = $request->query('category');
+        $searchTerm = $request->query('search');
+    
+        // Query the posts
+        $query = Post::where('post_staus', 'active')->latest();
+    
+        // Apply category filter if selected
+        if ($selectedCategory) {
+            $category = Category::where('name', $selectedCategory)->first();
+            if ($category) {
+                $query->where('category_id', $category->id);
+            }
+        }
+    
+        // Apply search filter if search term is provided
+        if ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('title', 'like', '%' . $searchTerm . '%')
+                  ->orWhere('description', 'like', '%' . $searchTerm . '%');
+            });
+        }
+    
+        // Get the posts based on the above filters
+        $post = $query->get();
+    
+        // Get the categories for the dropdown
+        $categories = Category::all();
+    
+        // Return the view with the posts, categories, and selected category
+        return view('home.homepage', compact('post', 'categories', 'selectedCategory', 'searchTerm'));
+    }    
 
 
   public function post_details($id)
