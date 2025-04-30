@@ -116,24 +116,33 @@ class HomeController extends Controller
     $user = Auth::user();
     $userid = $user->id;
 
-    $category = $request->input('category');
+    $categoryName = $request->input('category');
+    $searchQuery = $request->input('search');
 
-    if ($category) {
+    $query = Post::where('user_id', $userid);
 
-        $category = Category::where('name', $category)->first();
-
+    // Filter by category name (if provided)
+    if ($categoryName) {
+        $category = Category::where('name', $categoryName)->first();
         if ($category) {
-            $data = Post::where('user_id', $userid)
-                        ->where('category_id', $category->id) 
-                        ->get();
+            $query->where('category_id', $category->id);
         } else {
-            $data = collect(); 
+            // No matching category, return empty result
+            $data = collect();
+            $categories = Category::all(); 
+            return view('home.my_post', compact('data', 'categories'));
         }
-    } else {
-       
-        $data = Post::where('user_id', $userid)->get();
     }
 
+    // Apply search filter (if provided)
+    if ($searchQuery) {
+        $query->where(function($q) use ($searchQuery) {
+            $q->where('title', 'like', '%' . $searchQuery . '%')
+              ->orWhere('description', 'like', '%' . $searchQuery . '%');
+        });
+    }
+
+    $data = $query->get();
     $categories = Category::all(); 
 
     return view('home.my_post', compact('data', 'categories'));

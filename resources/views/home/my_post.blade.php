@@ -144,7 +144,40 @@
             padding: 1px 0;
         }
 
+        /* for search */
+        .category-search-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px auto;
+            max-width: 700px;
+            align-items: center;
+        }
+
+        .search-bar-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-input {
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: 2px solid rgba(120, 120, 120, 0.8);
+            font-weight: 500;
+            width: 220px;
+            background: rgba(230, 240, 255, 0.95);
+            color: #333;
+        }
+
+        .search-button {
+            padding: 6px 10px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
     </style>
+    
 </head>
 <body>
     <!-- header section start -->
@@ -169,8 +202,8 @@
 
     <!-- Custom Dropdown Category Filter -->
     <div class="category-filter-section">
-    <form method="GET" action="{{ url('/my_post') }}" class="mb-2">
-        <div class="custom-select-wrapper mx-auto">
+        <form method="GET" action="{{ url('/my_post') }}" class="category-search-wrapper">
+        <div class="custom-select-wrapper">
             <div class="custom-select" id="customSelect">
                 <span id="selectedCategory">{{ request('category') ?? 'Choose a category' }}</span>
                 <svg class="dropdown-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24">
@@ -189,7 +222,13 @@
             </div>
             <input type="hidden" name="category" id="categoryInput" value="{{ request('category') }}">
         </div>
-    </form>
+
+        <!-- Search Functionality -->
+        <div class="search-bar-wrapper">
+            <input type="text"  name="search"  class="search-input"  placeholder="Search posts...  🔍" value="{{ request('search') }}">
+            <button type="submit" class="btn btn-success search-button">Search</button>
+        </div>
+        </form>
     </div>
 
     <!-- posts wrapper -->

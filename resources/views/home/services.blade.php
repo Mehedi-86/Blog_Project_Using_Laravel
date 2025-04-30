@@ -274,11 +274,11 @@
     /* Search Button Style */
     .search-button {
         border-radius: 30px;
-        padding: 7px 25px; /* Wider padding */
+        padding: 5px 25px; /* Wider padding */
         font-size: 16px;
         background-color: #007bff;
         color: #fff;
-        border: 2px solid #555555;
+        border: 2px solid rgba(25, 42, 86, 0.4);
         display: flex;
         align-items: center;
         justify-content: center;
