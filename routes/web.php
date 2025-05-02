@@ -95,4 +95,5 @@ Route::get('/profile/picture', [HomeController::class, 'showPictureForm'])->name
 
 Route::post('/profile/picture', [HomeController::class, 'updatePicture'])->name('profile.picture.update');
 
+Route::post('/posts/{post}/save-toggle', [HomeController::class, 'toggleSave'])->name('posts.toggleSave');
 

@@ -138,23 +138,58 @@
                 {!! $post->description !!}
             </div>
 
-            <!-- Like Section with the added id="like-section" -->
-            <div class="mt-4 d-flex flex-column align-items-center"  id="like-section">
-                <!-- Like Button -->
-                <form action="{{ route('post.like', $post->id) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn {{ $post->likes()->where('user_id', auth()->id())->exists() ? 'btn-secondary' : 'btn-primary' }}">
-                        <strong>{{ $post->likes()->where('user_id', auth()->id())->exists() ? 'Liked' : 'Like' }}</strong>
-                    </button>
-                </form>
 
-                <!-- Like Count -->
-                <div class="mt-2">
-                    <p class="mb-0 fw-bold" style="font-size: 1.2rem; font-weight: 700;">
-                        <strong>{{ $post->likes->count() }}</strong> Likes
-                    </p>
-                </div>
-            </div>
+           <!-- Container for Like and Save Buttons on Same Line -->
+<div class="d-flex justify-content-center align-items-start mt-4" id="like-section">
+    
+    <!-- Like Section -->
+    <div class="d-flex flex-column align-items-center me-3"> <!-- Added right margin -->
+        <!-- Like Button -->
+        <form action="{{ route('post.like', $post->id) }}" method="POST">
+            @csrf
+            <button type="submit" class="btn {{ $post->likes()->where('user_id', auth()->id())->exists() ? 'btn-secondary' : 'btn-primary' }}">
+                <strong>{{ $post->likes()->where('user_id', auth()->id())->exists() ? 'Liked' : 'Like' }}</strong>
+            </button>
+        </form>
+
+        <!-- Like Count -->
+        <div class="mt-2">
+            <p class="mb-0 fw-bold" style="font-size: 1.2rem;">
+                <strong>{{ $post->likes->count() }}</strong> Likes
+            </p>
+        </div>
+    </div>
+
+    <!-- Save Post Button -->
+    <div>
+        <form action="{{ route('posts.toggleSave', $post->id) }}" method="POST">
+            @csrf
+            <button type="submit" 
+                    class="btn {{ auth()->user()->savedPosts->contains($post->id) ? 'btn-secondary' : 'btn-primary' }}">
+                @if(auth()->user()->savedPosts->contains($post->id))
+                    <strong>Unsave Post</strong>
+                @else
+                    <strong>Save Post</strong> 
+                @endif
+            </button>
+        </form>
+    </div>
+</div>
+
+
+       <!-- Success Message for Save Post -->
+<div style="max-height: 50px; overflow: hidden; padding: 5px 15px;">
+    @if(session('save_message'))
+        <div class="alert alert-success alert-dismissible fade show d-flex justify-content-between align-items-center" role="alert" style="padding: 6px 12px; font-size: 14px; font-weight: bold; margin-bottom: 10px;">
+            <div>{{ session('save_message') }}</div>
+            <button type="button" class="close ml-2" data-dismiss="alert" aria-label="Close" style="font-size: 25px; font-weight: bold;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+</div>
+
+
 
             <!-- Success/Error Messages for like section -->
 <div style="max-height: 50px; overflow: hidden; padding: 5px 15px;">

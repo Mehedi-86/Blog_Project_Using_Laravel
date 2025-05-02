@@ -106,6 +106,19 @@
 </div>
 
 
+    {{-- Saved Posts --}}
+    <div class="mb-4">
+        <h4 class="section-title">Saved Posts</h4>
+        @forelse($savedPosts as $post)
+            <div class="card p-3 mb-2">
+                <h5>{{ $post->title }}</h5>
+                <a href="{{ url('post_details', $post->id) }}">View Post</a>
+            </div>
+        @empty
+            <p class="no-data-text">No saved posts yet.</p>
+        @endforelse
+    </div>
+
 
     {{-- Liked Posts --}}
     <div class="mb-4">

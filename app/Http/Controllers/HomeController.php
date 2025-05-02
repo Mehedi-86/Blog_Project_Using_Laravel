@@ -370,8 +370,9 @@ public function profile($id)
     $user = User::findOrFail($id);
     $comments = Comment::where('user_id', $id)->latest()->get();
     $likedPosts = $user->likedPosts()->latest()->get(); // Assumes relationship exists
+    $savedPosts = $user->savedPosts()->latest()->get(); // Add this line
 
-    return view('home.profile', compact('user', 'comments', 'likedPosts'));
+    return view('home.profile', compact('user', 'comments', 'likedPosts', 'savedPosts'));
 }
 
 public function showPictureForm()
@@ -399,6 +400,19 @@ public function updatePicture(Request $request)
     $user->save();
 
     return redirect()->route('user.profile', ['id' => $user->id])->with('success', 'Profile picture updated!');
+}
+
+public function toggleSave(Post $post)
+{
+    $user = auth()->user();
+
+    if ($user->savedPosts()->where('post_id', $post->id)->exists()) {
+        $user->savedPosts()->detach($post->id);
+        return back()->with('save_message', 'Post removed from saved list.')->withFragment('like-section');
+    } else {
+        $user->savedPosts()->attach($post->id);
+        return back()->with('save_message', 'Post saved successfully.')->withFragment('like-section');
+    }
 }
 
 }

@@ -78,4 +78,10 @@ public function likedPosts()
     return $this->belongsToMany(Post::class, 'likes', 'user_id', 'post_id')->withTimestamps();
 }
 
+public function savedPosts()
+{
+    return $this->belongsToMany(Post::class, 'post_user_saves')->withTimestamps();
+}
+
+
 }
