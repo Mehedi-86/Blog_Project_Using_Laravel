@@ -16,42 +16,40 @@ class HomeController extends Controller
 {
     
     public function homepage(Request $request)
-    {
+   {
+        // If the user is logged in and is an admin, redirect to admin dashboard
+        if (Auth::check() && Auth::user()->usertype === 'admin') {
+            return view('admin.adminhome');
+        }
+
+        // Continue loading the public or user homepage (same logic for both)
         $selectedCategory = $request->query('category');
         $searchTerm = $request->query('search');
-    
-        // Query the posts
+
         $query = Post::where('post_staus', 'active')->latest();
-    
-        // Apply category filter if selected
+
         if ($selectedCategory) {
             $category = Category::where('name', $selectedCategory)->first();
             if ($category) {
                 $query->where('category_id', $category->id);
             }
         }
-    
-        // Apply search filter if search term is provided
+
         if ($searchTerm) {
             $query->where(function ($q) use ($searchTerm) {
                 $q->where('title', 'like', '%' . $searchTerm . '%')
-                  ->orWhere('description', 'like', '%' . $searchTerm . '%');
+                ->orWhere('description', 'like', '%' . $searchTerm . '%');
             });
         }
-    
-        // Get the posts based on the above filters
-        $post = $query->get();
-    
-        // Get the categories for the dropdown
-        $categories = Category::all();
-    
-        // Return the view with the posts, categories, and selected category
-        return view('home.homepage', compact('post', 'categories', 'selectedCategory', 'searchTerm'));
-    }    
 
+        $post = $query->get();
+        $categories = Category::all();
+
+        return view('home.homepage', compact('post', 'categories', 'selectedCategory', 'searchTerm'));
+  }
 
   public function post_details($id)
-{
+  {
     $post = Post::findOrFail($id);
 
     $comments = Comment::with([
@@ -64,7 +62,7 @@ class HomeController extends Controller
       ->get();
 
     return view('home.post_details', compact('post', 'comments'));
-}
+  }
 
 
   public function create_post()

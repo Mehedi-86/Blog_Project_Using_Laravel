@@ -30,7 +30,7 @@ Route::middleware([
     })->name('dashboard');
 
     // Admin Home Page
-    Route::get('/admin/home', [HomeController::class, 'index'])->name('admin.home');
+    Route::get('/admin/home', [HomeController::class, 'homepage'])->name('admin.home');
 });
 
 // Home Route for Authenticated Users (redirect based on user type)

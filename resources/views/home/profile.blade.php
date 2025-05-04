@@ -136,10 +136,15 @@
     {{-- Comments --}}
     <div class="mb-4">
         <h4 class="section-title">Comment On Posts</h4>
-        @forelse($comments as $comment)
+                @php
+            $commentedPosts = $comments->groupBy('post_id')->map->first(); // Group and get first comment per post
+        @endphp
+
+        @forelse($commentedPosts as $comment)
             <div class="card p-3 mb-2">
-                <p>{{ $comment->content }}</p>
-                <small>On Post: <a href="{{ url('post_details', $comment->post_id) }}">{{ $comment->post->title ?? 'Unknown' }}</a></small>
+                <h5>{{ $comment->post->title ?? 'Unknown' }}</h5>
+                <p>You've commented on this post.</p>
+                <a href="{{ url('post_details', $comment->post_id) }}">View Post</a>
             </div>
         @empty
             <p class="no-data-text">No comments yet.</p>

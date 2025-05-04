@@ -161,16 +161,19 @@
     </div>
 
     <!-- Save Post Button -->
-    <div>
-        <form action="{{ route('posts.toggleSave', $post->id) }}" method="POST">
+    <div class="d-flex flex-column align-items-center">
+        <form action="{{ auth()->check() ? route('posts.toggleSave', $post->id) : route('login') }}" method="POST">
             @csrf
-            <button type="submit" 
-                    class="btn {{ auth()->user()->savedPosts->contains($post->id) ? 'btn-secondary' : 'btn-primary' }}">
-                @if(auth()->user()->savedPosts->contains($post->id))
-                    <strong>Unsave Post</strong>
-                @else
-                    <strong>Save Post</strong> 
-                @endif
+            <button type="submit"
+                    class="btn {{ auth()->check() && auth()->user()->savedPosts->contains($post->id) ? 'btn-secondary' : 'btn-primary' }}"
+                    @guest onclick="event.preventDefault(); window.location='{{ route('login') }}';" @endguest>
+                <strong>
+                    @auth
+                        {{ auth()->user()->savedPosts->contains($post->id) ? 'Unsave Post' : 'Save Post' }}
+                    @else
+                        Save Post
+                    @endauth
+                </strong>
             </button>
         </form>
     </div>
