@@ -106,6 +106,47 @@
 </div>
 
 
+    {{-- Notifications --}}
+    @if(auth()->id() === $user->id)
+        <div class="mb-4">
+            <h4 class="section-title">Notifications</h4>
+            @forelse($notifications as $notification)
+                <div class="card p-3 mb-2">
+                    @if($notification->type === 'App\Notifications\PostLiked')
+                        <p>
+                            <strong>{{ $notification->data['liker_name'] ?? 'Someone' }}</strong>
+                            liked your post:
+                            <strong>{{ $notification->data['post_title'] ?? 'Untitled Post' }}</strong>
+                        </p>
+                        <a href="{{ url('post_details', $notification->data['post_id'] ?? '#') }}">View Post</a>
+
+                    @elseif($notification->type === 'App\Notifications\CommentedOnPost')
+                        <p>
+                            <strong>{{ $notification->data['commenter_name'] ?? 'Someone' }}</strong>
+                            commented on your post:
+                            <strong>{{ $notification->data['post_title'] ?? 'Untitled Post' }}</strong>
+                        </p>
+                        <a href="{{ url('post_details', $notification->data['post_id'] ?? '#') }}">View Post</a>
+
+                    @elseif($notification->type === 'App\Notifications\RepliedToComment')
+                        <p>
+                            <strong>{{ $notification->data['replier_name'] ?? 'Someone' }}</strong>
+                            replied to your comment on the post:
+                            <strong>{{ $notification->data['post_title'] ?? 'Untitled Post' }}</strong>
+                        </p>
+                        <a href="{{ url('post_details', $notification->data['post_id'] ?? '#') }}">View Post</a>
+
+                    @else
+                        <p>New notification</p>
+                    @endif
+                </div>
+            @empty
+                <p class="no-data-text">No new notifications.</p>
+            @endforelse
+        </div>
+    @endif
+
+
     {{-- Saved Posts --}}
     <div class="mb-4">
         <h4 class="section-title">Saved Posts</h4>
@@ -132,6 +173,7 @@
             <p class="no-data-text">No liked posts yet.</p>
         @endforelse
     </div>
+    
 
     {{-- Comments --}}
     <div class="mb-4">

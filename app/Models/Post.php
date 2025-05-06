@@ -5,7 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
-{
+{   
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    
     // Define the relationship with the Like model
     public function likes()
     {

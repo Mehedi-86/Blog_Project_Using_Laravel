@@ -11,6 +11,10 @@ use App\Models\Like;
 use App\Models\Comment;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Category;
+use App\Notifications\RepliedToComment;
+use App\Notifications\PostLiked;
+use App\Notifications\CommentedOnPost;
+
 
 class HomeController extends Controller
 {
@@ -226,10 +230,14 @@ class HomeController extends Controller
                          ->withFragment('like-section');
     }
 
+    // Create the like and send notification
     Like::create([
         'user_id' => $user->id,
         'post_id' => $post->id,
     ]);
+
+    // Send notification to post owner
+    $post->user->notify(new PostLiked($user, $post));  // Send notification to post owner with the liker's info 
 
     return redirect()->route('post.details', $id)
                      ->with('like_message', 'Post liked successfully!')
@@ -247,16 +255,19 @@ public function storeComment(Request $request, $postId)
         return redirect()->route('login')->with('comment_error', 'Please log in to comment.');
     }
 
-    Comment::create([
+    $comment = Comment::create([
         'user_id' => Auth::id(),
         'post_id' => $postId,
         'body' => $request->body,
     ]);
 
-    return redirect()->route('post.details', $postId)
-    ->with('comment_message', 'Comment added successfully.')
-    ->withFragment('comment-section');
+    // Send notification to the post owner
+    $post = Post::find($postId);
+    $post->user->notify(new CommentedOnPost($comment, $post));  // Assuming PostCommented is a notification
 
+    return redirect()->route('post.details', $postId)
+                     ->with('comment_message', 'Comment added successfully.')
+                     ->withFragment('comment-section');
 }
 
 public function deleteComment($id)
@@ -318,8 +329,15 @@ public function storeReply(Request $request, Comment $comment)
     $reply->post_id = $comment->post_id;
     $reply->save();
 
+    // ✅ Make sure the 'post' relationship is loaded
+    $comment->load('post');
+
+    // Send notification to the original comment author
+    $comment->user->notify(new RepliedToComment($reply, $comment));  // Assuming CommentReplied is a notification
+
     return back()->with('comment_message', 'Reply posted successfully!')->withFragment('comment-section');
 }
+
 
 public function updateReply(Request $request, $id)
 {
@@ -367,11 +385,20 @@ public function profile($id)
 {
     $user = User::findOrFail($id);
     $comments = Comment::where('user_id', $id)->latest()->get();
-    $likedPosts = $user->likedPosts()->latest()->get(); // Assumes relationship exists
-    $savedPosts = $user->savedPosts()->latest()->get(); // Add this line
+    $likedPosts = $user->likedPosts()->latest()->get();
+    $savedPosts = $user->savedPosts()->latest()->get();
 
-    return view('home.profile', compact('user', 'comments', 'likedPosts', 'savedPosts'));
+    // Only fetch notifications for the currently authenticated user viewing their own profile
+    $notifications = [];
+    if (auth()->id() === $user->id) {
+        $notifications = $user->unreadNotifications;
+        // Mark each notification as read
+        $user->unreadNotifications->each->markAsRead(); // Marks all unread notifications as read
+    }
+
+    return view('home.profile', compact('user', 'comments', 'likedPosts', 'savedPosts', 'notifications'));
 }
+
 
 public function showPictureForm()
 {
@@ -411,6 +438,20 @@ public function toggleSave(Post $post)
         $user->savedPosts()->attach($post->id);
         return back()->with('save_message', 'Post saved successfully.')->withFragment('like-section');
     }
+}
+
+public function show($id)
+{
+    $user = User::findOrFail($id);
+
+    // Only show notifications if it's the user's own profile
+    $notifications = [];
+
+    if (auth()->id() === $user->id) {
+        $notifications = auth()->user()->unreadNotifications;
+    }
+
+    return view('profile', compact('user', 'notifications'));
 }
 
 }
