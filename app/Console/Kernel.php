@@ -14,6 +14,9 @@ class Kernel extends ConsoleKernel
     {
         // For example: Run every day at midnight
         $schedule->command('postimage:clean')->daily();
+
+        // Run daily cleanup of read notifications older than 7 days
+        $schedule->command('notifications:cleanup')->daily();
     }
 
     protected function commands()

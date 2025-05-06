@@ -329,11 +329,14 @@ public function storeReply(Request $request, Comment $comment)
     $reply->post_id = $comment->post_id;
     $reply->save();
 
-    // ✅ Make sure the 'post' relationship is loaded
+    //  Make sure the 'post' relationship is loaded
     $comment->load('post');
 
+    //  Explicitly load the replier (so their name is guaranteed)
+    $replier = auth()->user();
+
     // Send notification to the original comment author
-    $comment->user->notify(new RepliedToComment($reply, $comment));  // Assuming CommentReplied is a notification
+    $comment->user->notify(new RepliedToComment(auth()->user(), $comment));  // Assuming CommentReplied is a notification
 
     return back()->with('comment_message', 'Reply posted successfully!')->withFragment('comment-section');
 }
