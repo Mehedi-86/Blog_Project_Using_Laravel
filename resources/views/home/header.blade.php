@@ -8,20 +8,46 @@
                   <div class="collapse navbar-collapse" id="navbarNav">
                      <ul class="navbar-nav">
                         <li class="nav-item">
-                           <a class="nav-link" href="index.html">Home</a>
+                           @auth
+                           <a class="nav-link" href="{{ route('home') }}">Home</a>
+                           @else
+                           <a class="nav-link" href="{{ route('homepage') }}">Home</a>
+                           @endauth
                         </li>
                         <li class="nav-item">
-                           <a class="nav-link" href="about.html">About</a>
+                           <a class="nav-link" href="{{ route('about.page') }}">About</a>
                         </li>
                         <li class="nav-item">
-                           <a class="nav-link" href="services.html">Services</a>
+                           <a class="nav-link" href="{{ route('blog.page') }}">Blog</a>
                         </li>
-                        <li class="nav-item">
-                           <a class="nav-link " href="blog.html">Blog</a>
-                        </li>
-                        <li class="nav-item">
-                           <a class="nav-link " href="contact.html">Contact</a>
-                        </li>
+
+                          @if (Route::has('login'))
+                          @auth
+                     
+                           <li> <x-app-layout> </x-app-layout> </li>
+
+                           <li class="nav-item">
+                              <a class="nav-link text-white" href="{{ route('user.profile', Auth::id()) }}">My Profile</a>
+                           </li>
+                           <li class="nav-item">
+                              <a class="nav-link text-white" href="{{ url('my_post') }}">My Post</a>
+                           </li>
+                           <li class="nav-item">
+                              <a class="nav-link text-white" href="{{ url('create_post') }}">Create Post</a>
+                           </li>
+
+                           @else
+                           
+                           {{-- For guests --}}
+                           <li class="nav-item">
+                              <a class="nav-link text-white" href="{{ route('login') }}">Login</a>
+                           </li>
+                           <li class="nav-item">
+                              <a class="nav-link text-white" href="{{ route('register') }}">Register</a>
+                           </li>
+
+                           @endauth
+                           @endif
                      </ul>
                   </div>
                </nav>

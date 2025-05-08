@@ -4,14 +4,14 @@
 
 <style>
     body {
-        background-color: #f7f9fc;
+        background-color: #f0f4f8;
     }
 
     .profile-header {
         font-size: 2.2rem;
         font-weight: bold;
         margin-bottom: .5rem;
-        color: #2980b9;
+        color: #2c3e50;
     }
 
     .profile-container {
@@ -19,16 +19,23 @@
     }
 
     .card {
-        background-color: #ffffff;
+        background-color: #fff;
+        border: none;
+        border-radius: 15px;
         border-left: 5px solid #3498db;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        transition: transform 0.2s ease;
         margin-bottom: 1.5rem; /* Adds spacing between card sections */
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
     }
 
     .card h5 {
         font-size: 1.5rem;
         font-weight: 600;
-        color: #2d3436;
+        color: #34495e;
     }
 
     .card p,
@@ -36,34 +43,74 @@
     .no-data-text,
     .card a {
         font-size: 1.2rem;
-        color: #636e72;
+        color: #7f8c8d;
     }
 
     .section-title {
-        font-size: 2rem;
+        font-size: 1.8rem;
         font-weight: 700;
         margin-bottom: .5rem;
         color: #2980b9;
+        margin: 2rem 0 1rem;
         padding-top: 20px; /* Adds spacing between section titles */
     }
 
     .card a {
         font-weight: 600;
-        display: inline-block;
-        margin-top: 0.5rem;
-        color: #0984e3;
+        font-size: 1rem;
+        color: #3498db;
         text-decoration: none;
+        display: inline-block;
+        margin-top: 0.3rem;
     }
 
     .card a:hover {
         text-decoration: underline;
-        color: #0652DD;
+        color: #2c82c9;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        font-size: 0.95rem;
+        padding: 0.45rem 1rem;
+        border-radius: 8px;
+        margin-top: 0.5rem;
+        cursor: pointer;
+    }
+
+    .profile-img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #3498db;
+        margin-right: 1rem;
     }
 
     .no-data-text {
         font-style: italic;
         color: #b2bec3;
     }
+
+    @media (max-width: 768px) {
+    .profile-header {
+        text-align: center;
+    }
+
+    .profile-container {
+        padding-top: 120px;
+    }
+
+    .d-flex.align-items-center {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-img {
+        margin-bottom: 1rem;
+    }
+}
+
 </style>
 
 <div class="container profile-container">
@@ -74,9 +121,9 @@
     <div class="d-flex align-items-center">
         {{-- Profile Picture Display --}}
         @if ($user->profile_picture)
-            <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture" class="rounded-circle me-3" width="100" height="100">
+            <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture" class="profile-img">
         @else
-            <img src="{{ asset('images/default-profile.png') }}" alt="Default Profile" class="rounded-circle me-3" width="100" height="100">
+            <img src="{{ asset('images/default-profile.png') }}" alt="Default Profile" class="profile-img">
         @endif
 
         <div>
@@ -99,7 +146,7 @@
                 @endif
 
                 {{-- Always show update --}}
-                <button type="button" class="btn btn-secondary" onclick="document.getElementById('profile_picture_input').click();">Update Profile Picture</button>
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('profile_picture_input').click();"><strong>Update Picture</strong></button>
             </form>
         </div>
     </div>
@@ -109,40 +156,60 @@
     {{-- Notifications --}}
     @if(auth()->id() === $user->id)
         <div class="mb-4">
-            <h4 class="section-title">Notifications</h4>
-            @forelse($notifications as $notification)
-                <div class="card p-3 mb-2">
-                    @if($notification->type === 'App\Notifications\PostLiked')
-                        <p>
-                            <strong>{{ $notification->data['liker_name'] ?? 'Someone' }}</strong>
-                            liked your post:
-                            <strong>{{ $notification->data['post_title'] ?? 'Untitled Post' }}</strong>
-                        </p>
-                        <a href="{{ url('post_details', $notification->data['post_id'] ?? '#') }}">View Post</a>
+            
+            <h4 class="section-title position-relative" style="display: flex; align-items: center;">
+                Notifications
+                <span style="position: relative; margin-left: 8px; cursor: pointer;" id="bell-icon"> {{-- Added cursor pointer for clickable effect --}}
+                    {{-- Inline SVG Bell Icon --}}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2c3e50" viewBox="0 0 16 16">
+                        <path d="M8 16a2 2 0 0 0 1.985-1.75H6.015A2 2 0 0 0 8 16zm6-6a1 1 0 0 1-1-1V7a5.002 5.002 0 0 0-4-4.9V2a1 1 0 0 0-2 0v.1A5.002 5.002 0 0 0 3 7v2a1 1 0 0 1-1 1H1v1h14v-1h-1z"/>
+                    </svg>
 
-                    @elseif($notification->type === 'App\Notifications\CommentedOnPost')
-                        <p>
-                            <strong>{{ $notification->data['commenter_name'] ?? 'Someone' }}</strong>
-                            commented on your post:
-                            <strong>{{ $notification->data['post_title'] ?? 'Untitled Post' }}</strong>
-                        </p>
-                        <a href="{{ url('post_details', $notification->data['post_id'] ?? '#') }}">View Post</a>
-
-                    @elseif($notification->type === 'App\Notifications\RepliedToComment')
-                        <p>
-                            <strong>{{ $notification->data['replier_name'] ?? 'Someone' }}</strong>
-                            replied to your comment on the post:
-                            <strong>{{ $notification->data['post_title'] ?? 'Untitled Post' }}</strong>
-                        </p>
-                        <a href="{{ url('post_details', $notification->data['post_id'] ?? '#') }}">View Post</a>
-
-                    @else
-                        <p>New notification</p>
+                    {{-- Notification Count Badge --}}
+                    @if($notifications->count() > 0)
+                        <span style="position: absolute; top: -8px; right: -10px; background: red; color: white; font-size: 10px; border-radius: 50%; padding: 2px 5px;">
+                            {{ $notifications->count() }}
+                        </span>
                     @endif
-                </div>
-            @empty
-                <p class="no-data-text">No new notifications.</p>
-            @endforelse
+                </span>
+            </h4>
+
+            {{-- Notifications Section --}}
+            <div id="notifications-section" style="display: none; border: 1px solid #ddd; background-color: white; padding: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                @forelse($notifications as $notification)
+                    <div class="card p-3 mb-2">
+                        @if($notification->type === 'App\Notifications\PostLiked')
+                            <p>
+                                <strong>{{ $notification->data['liker_name'] ?? 'Someone' }}</strong>
+                                liked your post:
+                                <strong>{{ $notification->data['post_title'] ?? 'Untitled Post' }}</strong>
+                            </p>
+                            <a href="{{ url('post_details', $notification->data['post_id'] ?? '#') }}">View Post</a>
+
+                        @elseif($notification->type === 'App\Notifications\CommentedOnPost')
+                            <p>
+                                <strong>{{ $notification->data['commenter_name'] ?? 'Someone' }}</strong>
+                                commented on your post:
+                                <strong>{{ $notification->data['post_title'] ?? 'Untitled Post' }}</strong>
+                            </p>
+                            <a href="{{ url('post_details', $notification->data['post_id'] ?? '#') }}">View Post</a>
+
+                        @elseif($notification->type === 'App\Notifications\RepliedToComment')
+                            <p>
+                                <strong>{{ $notification->data['replier_name'] ?? 'Someone' }}</strong>
+                                replied to your comment on the post:
+                                <strong>{{ $notification->data['post_title'] ?? 'Untitled Post' }}</strong>
+                            </p>
+                            <a href="{{ url('post_details', $notification->data['post_id'] ?? '#') }}">View Post</a>
+
+                        @else
+                            <p>New notification</p>
+                        @endif
+                    </div>
+                @empty
+                    <p class="no-data-text">No new notifications.</p>
+                @endforelse
+            </div>
         </div>
     @endif
 
@@ -205,5 +272,29 @@
         }, 5000); // 5000ms = 5 seconds
     @endif
 </script>
+
+{{-- Add the following JavaScript to toggle the visibility --}}
+<script>
+    // Select the bell icon and notifications section
+    const bellIcon = document.getElementById('bell-icon');
+    const notificationsSection = document.getElementById('notifications-section');
+
+    // Toggle notifications visibility on bell icon click
+    bellIcon.addEventListener('click', () => {
+        if (notificationsSection.style.display === 'none' || notificationsSection.style.display === '') {
+            notificationsSection.style.display = 'block';  // Show notifications
+        } else {
+            notificationsSection.style.display = 'none';  // Hide notifications
+        }
+    });
+
+    // Close notifications if clicked outside the bell icon
+    window.addEventListener('click', (event) => {
+        if (!bellIcon.contains(event.target) && !notificationsSection.contains(event.target)) {
+            notificationsSection.style.display = 'none';  // Close notifications if clicked outside
+        }
+    });
+</script>
+
 
 @endsection
