@@ -66,8 +66,7 @@
 
                      <li><a href="{{ route('about.page') }}">About</a></li>                    
                      <li><a href="{{ route('blog.page') }}">Blog</a></li>
-
-
+            
                      @if (Route::has('login'))
                      @auth
                      

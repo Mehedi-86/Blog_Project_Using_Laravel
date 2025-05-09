@@ -69,6 +69,10 @@
         color: #2c82c9;
     }
 
+    #bell-icon svg {
+    fill: #a97142; 
+    }
+
     .btn-primary,
     .btn-secondary {
         font-size: 0.95rem;
@@ -109,12 +113,79 @@
     .profile-img {
         margin-bottom: 1rem;
     }
+    
 }
+
+ /* Dark mode styles - apply globally */
+ body.dark-mode {
+        background-color: #1e1e1e;
+        color: #ffffff;
+    }
+
+    body.dark-mode .profile-header {
+        color: #ffffff;
+    }
+
+    body.dark-mode .card {
+        background-color: #333;
+        border-left: 5px solid #2980b9;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    }
+
+    body.dark-mode .card h5 {
+        color: #e6e6fa; 
+    }
+
+    body.dark-mode .card a,
+    body.dark-mode .no-data-text,
+    body.dark-mode .no-data-text,
+    body.dark-mode .card p {
+        color: #e5e4e2;
+    }
+
+    body.dark-mode .section-title {
+        color: #5dade2;
+    }
+
+    body.dark-mode .card a {
+        color: #9fa8da;
+    }
+
+    body.dark-mode .card a:hover {
+        color: #7986cb;
+    }
+
+    body.dark-mode .btn-primary,
+    body.dark-mode .btn-secondary {
+        background-color: #3f51b5;
+        color: #fff;
+    }
+
+    /* Default light mode button style */
+    #darkModeToggle {
+        background-color: #343a40; /* light gray */
+        color: #333;
+        border: 1px solid #d0d8e0;
+    }
+
+    /* Dark mode style override */
+    body.dark-mode #darkModeToggle {
+        background-color: #999999; /* soft light bg */
+        color: #121212;
+        border: 1px solid #444;
+    }
+    
+    body.dark-mode #bell-icon svg {
+    fill: #f1c40f; 
+    }
 
 </style>
 
 <div class="container profile-container">
-    <h5 class="profile-header">{{ $user->name }}'s Profile</h5>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="profile-header mb-0">{{ $user->name }}'s Profile</h5>
+        <button id="darkModeToggle" onclick="toggleDarkMode()" class="btn btn-sm btn-outline-secondary">🌙 / ☀️</button>
+    </div>              
 
     {{-- Profile Info --}}
 <div class="card p-3 mb-4">
@@ -294,6 +365,18 @@
             notificationsSection.style.display = 'none';  // Close notifications if clicked outside
         }
     });
+</script>
+
+<script>
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
+
+    // Load theme from localStorage
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
 </script>
 
 
