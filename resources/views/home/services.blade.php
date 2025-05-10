@@ -399,11 +399,11 @@
     }
 
     body.dark-mode .read-more {
-        background: #487eb0;
+        background: #5e60ce;
     }
 
     body.dark-mode .read-more:hover {
-        background: #40739e;
+        background: #4e4fc4;
     }
 
     body.dark-mode .services_taital,
@@ -412,23 +412,23 @@
     }
 
     body.dark-mode .search-input {
-        background-color: #3c3c3c;
-        color: #ffffff;
-        border: 1px solid #555;
+        background-color: #2c3e50;  
+        color: #ecf0f1;              
+        border: 1px solid #34495e;   
     }
 
     body.dark-mode .search-input::placeholder {
-        color: #bbb;
+        color: #7f8c8d;  
     }
 
     body.dark-mode .search-button {
-        background-color: #487eb0;
-        border-color: rgba(255, 255, 255, 0.2);
-        color: #fff;
+        background-color: #2980b9;  
+        border-color: rgba(255, 255, 255, 0.2);  
+        color: #fff;  
     }
 
     body.dark-mode .search-button:hover {
-        background-color: #40739e;
+        background-color: #3498db;  
     }
 
     body.dark-mode .text-muted {
