@@ -1,8 +1,11 @@
 <div class="services_section layout_padding">
     <div class="container">
         <h1 class="services_taital">Blog Posts</h1>
-        <p class="services_text">
+        <p class="services_text" style="display: flex; justify-content: space-between; align-items: center;">
             There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration
+            <button id="darkModeToggle" onclick="toggleDarkMode()" class="btn btn-sm btn-outline-secondary" style="margin-left: auto;">
+                🌙 ↔️ ☀️
+            </button>
         </p>
 
         <!-- Custom Dropdown Form -->
@@ -326,6 +329,120 @@
         padding-right: 0;
     }
 
+    /* Default light mode button style */
+    #darkModeToggle {
+        background-color: #343a40; /* light gray */
+        color: #333;
+        border: 1px solid #d0d8e0;
+    }
+
+    /* Dark mode style override */
+    body.dark-mode #darkModeToggle {
+        background-color: #999999; /* soft light bg */
+        color: #121212;
+        border: 1px solid #444;
+    }
+
+    body.dark-mode {
+    background-color: #1e272e;
+    color: #f1f2f6;
+    }
+
+    body.dark-mode .custom-select {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #f1f2f6;
+    }
+
+    body.dark-mode .custom-select:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 10px 28px rgba(255, 255, 255, 0.1);
+    }
+
+    body.dark-mode .dropdown-icon {
+        stroke: #f1f2f6;
+    }
+
+    body.dark-mode .dropdown-options {
+        background: #2f3640;
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 12px 24px rgba(255, 255, 255, 0.08);
+    }
+
+    body.dark-mode .dropdown-option {
+        background: #2f3640;
+        color: #dcdde1;
+    }
+
+    body.dark-mode .dropdown-option:hover,
+    body.dark-mode .dropdown-option.active {
+        background: #3c6382;
+        color: #ffffff;
+    }
+
+    body.dark-mode #selectedCategory {
+        color: #dcdde1;
+    }
+
+    body.dark-mode .blog-card {
+        background: #2f3640;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+    }
+
+    body.dark-mode .blog-card-title {
+        color: #f5f6fa;
+    }
+
+    body.dark-mode .blog-card-meta {
+        color: #a4b0be;
+    }
+
+    body.dark-mode .read-more {
+        background: #487eb0;
+    }
+
+    body.dark-mode .read-more:hover {
+        background: #40739e;
+    }
+
+    body.dark-mode .services_taital,
+    body.dark-mode .services_text {
+        color: #f5f6fa;
+    }
+
+    body.dark-mode .search-input {
+        background-color: #3c3c3c;
+        color: #ffffff;
+        border: 1px solid #555;
+    }
+
+    body.dark-mode .search-input::placeholder {
+        color: #bbb;
+    }
+
+    body.dark-mode .search-button {
+        background-color: #487eb0;
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #fff;
+    }
+
+    body.dark-mode .search-button:hover {
+        background-color: #40739e;
+    }
+
+    body.dark-mode .text-muted {
+        color: #cccccc !important; 
+    }
+
+    body.dark-mode .text-muted b {
+        color: #ffffff; 
+    }
+
+    body.dark-mode .text-muted span {
+        color: #dddddd; 
+    }
+
 </style>
 
 <!-- Scripts -->
@@ -381,4 +498,16 @@
             });
         });
     });
+</script>
+
+<script>
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
+
+    // Load theme from localStorage
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
 </script>

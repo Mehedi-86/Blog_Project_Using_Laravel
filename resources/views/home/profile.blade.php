@@ -184,7 +184,7 @@
 <div class="container profile-container">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h5 class="profile-header mb-0">{{ $user->name }}'s Profile</h5>
-        <button id="darkModeToggle" onclick="toggleDarkMode()" class="btn btn-sm btn-outline-secondary">🌙 / ☀️</button>
+        <button id="darkModeToggle" onclick="toggleDarkMode()" class="btn btn-sm btn-outline-secondary">🌙 ↔️ ☀️</button>
     </div>              
 
     {{-- Profile Info --}}
