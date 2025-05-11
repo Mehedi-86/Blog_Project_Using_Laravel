@@ -86,22 +86,168 @@
         /* Comment Styling */
         .comment-content 
         {
-        font-size: 1.2rem;  
+         font-size: 1.2rem;  
         }
 
         .comment-user 
         {
-        font-size: 1.5rem;  
-        font-weight: bold;
+          font-size: 1.5rem;  
+          font-weight: bold;
         }
 
        /* Timestamp (e.g., 30 minutes ago) */
         .comment-time 
         {
-        font-size: 1.1rem;  
-        color: #777;        
+         font-size: 1.1rem;  
+         color: #777;        
         }
 
+        /* Light mode (default): headings are blue */
+        body h1,
+        body h2,
+        body h3,
+        body h4,
+        body h5,
+        body h6 {
+          color: #3F51B5; /* Tailwind's blue-800 or any blue you prefer */
+        }
+
+        /* Dark Mode CSS start */
+
+        #darkModeToggle {
+            background-color: #343a40; /* light gray */
+            color: #333;
+            border: 1px solid #d0d8e0;
+        }
+
+        /* Dark mode style override */
+        body.dark-mode #darkModeToggle {
+            background-color: #999999; /* soft light bg */
+            color: #121212;
+            border: 1px solid #444;
+        }
+
+        body.dark-mode {
+           background-color: #121212;
+           color: #e0e0e0;
+        }
+
+        body.dark-mode .header_section,
+        body.dark-mode .wide-container,
+        body.dark-mode .desc_comment_wrapper,
+        body.dark-mode .modal-content {
+          background-color: #1e1e1e;
+          color: #e0e0e0;
+        }
+
+        body.dark-mode .desc_content {
+          color: #cccccc;
+        }
+
+        body.dark-mode .border {
+          border-color: #444;
+          background-color: #1e1e1e;
+        }
+
+        body.dark-mode .form-control {
+          background-color: #2a2a2a;
+          color: #ffffff;
+          border-color: #555;
+        }
+
+        body.dark-mode .form-control::placeholder {
+          color: #aaaaaa;
+        }
+
+        body.dark-mode .btn-primary {
+          background-color: #0d6efd;
+          border-color: #0d6efd;
+          color: #fff;
+        }
+
+        body.dark-mode .btn-secondary {
+          background-color: #6c757d;
+          border-color: #6c757d;
+          color: #fff;
+        }
+
+        body.dark-mode .btn-success {
+          background-color: #198754;
+          border-color: #198754;
+          color: #fff;
+        }
+
+        body.dark-mode .btn-outline-secondary {
+          background-color: #333;
+          color: #ddd;
+          border-color: #666;
+        }
+
+        body.dark-mode .btn-dark {
+          background-color: #444;
+          border-color: #555;
+          color: #fff;
+        }
+
+        body.dark-mode hr {
+          border-top: 2px solid #555;
+        }
+
+        body.dark-mode .alert-success {
+          background-color: #3b8c47; 
+          color: #f1f8e4; 
+        }
+
+        body.dark-mode .alert-danger {
+          background-color: #5f1a1a;
+          color: #f8cfcf;
+        }
+
+        body.dark-mode .dropdown-menu {
+          background-color: #2c2c2c;
+          color: #ffffff;
+        }
+
+        body.dark-mode .dropdown-item {
+          color: #ffffff;
+        }
+
+        body.dark-mode .dropdown-item:hover {
+          background-color: #444;
+        }
+
+        body.dark-mode p.text-muted {
+          color: #bbbbbb; /* Light gray for muted text */
+        }
+
+        body.dark-mode p.text-muted b {
+          color: #ffffff; /* Bright white for the author's name */
+        }
+
+        body.dark-mode p.text-muted span {
+          color: #cccccc; /* Slightly softer white for the view count */
+        }
+
+        body.dark-mode .text-muted {
+          color: #bbbbbb !important; /* Brighten muted text in dark mode */
+        }
+
+        body.dark-mode h1,
+        body.dark-mode h2,
+        body.dark-mode h3,
+        body.dark-mode h4,
+        body.dark-mode h5,
+        body.dark-mode h6 {
+          color: #a0cfff; 
+        }
+
+        body.dark-mode p {
+          color: #dddddd;
+        }
+
+        body.dark-mode b {
+          color: #ffffff;
+        }
       </style>
 
       <base href="/public">
@@ -128,6 +274,11 @@
            <span style="margin-left: 30px; margin-right: 30px;">|</span>
            <span>👁️ {{ $post->views }} views</span>
            </p>
+           <div style="display: flex; justify-content: flex-end;">
+                <button id="darkModeToggle" onclick="toggleDarkMode()" class="btn btn-sm btn-outline-secondary">
+                    🌙 ↔️ ☀️
+                </button>
+           </div>
         </div>
 
         <!-- Description + Comment Section -->
@@ -406,6 +557,18 @@ function openEditModal(commentId, body, isReply = false) {
 }
 
 
+</script>
+
+<script>
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
+
+    // Load theme from localStorage
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+    }
 </script>
 
 

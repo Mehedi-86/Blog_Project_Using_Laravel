@@ -251,6 +251,18 @@
     <!-- footer section -->
     @include('home.footer')
 
+    <script src="https://cdn.tiny.cloud/1/43ryrgz42cov96zpsu0vhqz1guhojcq6vmqfgc6clavjiirl/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+       tinymce.init({
+            selector: '#description',
+            height: 300,
+            menubar: false,
+            plugins: 'link image code lists',
+            toolbar: 'undo redo | styles | bold italic underline | alignleft aligncenter alignright | bullist numlist | link | code',
+            content_style: 'body { font-family:Arial,sans-serif; font-size:14px }'
+        });
+    </script>
+
     <script>
     document.addEventListener("DOMContentLoaded", () => {
     const select = document.getElementById("customSelect");
