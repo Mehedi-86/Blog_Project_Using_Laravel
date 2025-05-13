@@ -457,4 +457,38 @@ public function show($id)
     return view('profile', compact('user', 'notifications'));
 }
 
+public function connections()
+{
+    $user = Auth::user();
+
+    $followers = $user->followers;
+    $followings = $user->followings; // ✅ full user models
+    $followingIds = $followings->pluck('id'); // ✅ for quick ID check
+
+    $suggestions = User::whereNotIn('id', $followingIds)
+                        ->where('id', '!=', $user->id)
+                        ->get();
+
+    return view('home.connections', compact('followers', 'followings', 'followingIds', 'suggestions'));
+}
+
+
+public function follow($id)
+{
+    $user = Auth::user();
+    if (!$user->followings->contains($id)) {
+        $user->followings()->attach($id);
+    }
+
+    return back();
+}
+
+public function unfollow($id)
+{
+    $user = Auth::user();
+    $user->followings()->detach($id);
+
+    return redirect()->back()->with('success', 'User unfollowed.');
+}
+
 }

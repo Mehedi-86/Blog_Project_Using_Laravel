@@ -83,5 +83,16 @@ public function savedPosts()
     return $this->belongsToMany(Post::class, 'post_user_saves')->withTimestamps();
 }
 
+// Users who follow me
+public function followers()
+{
+    return $this->belongsToMany(User::class, 'follows', 'following_id', 'follower_id');
+}
+
+// Users I am following
+public function followings()
+{
+    return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id');
+}
 
 }

@@ -97,3 +97,8 @@ Route::post('/profile/picture', [HomeController::class, 'updatePicture'])->name(
 
 Route::post('/posts/{post}/save-toggle', [HomeController::class, 'toggleSave'])->name('posts.toggleSave');
 
+Route::get('/connections', [App\Http\Controllers\HomeController::class, 'connections'])->name('connections');
+
+Route::post('/follow/{id}', [App\Http\Controllers\HomeController::class, 'follow'])->name('follow');
+
+Route::post('/unfollow/{id}', [App\Http\Controllers\HomeController::class, 'unfollow'])->name('unfollow');

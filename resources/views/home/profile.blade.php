@@ -179,6 +179,11 @@
     fill: #f1c40f; 
     }
 
+    body.dark-mode .card a:hover,
+    body.dark-mode .btn-primary:hover {
+        color: white; 
+    }
+
 </style>
 
 <div class="container profile-container">
@@ -211,13 +216,22 @@
                     <div id="error_message" class="text-danger mt-1">{{ $message }}</div>
                 @enderror
 
+                <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
                 {{-- Show "Add" if no profile picture --}}
                 @if (!$user->profile_picture)
-                    <button type="button" class="btn btn-primary me-2" onclick="document.getElementById('profile_picture_input').click();">Add Profile Picture</button>
+                    <button type="button" class="btn btn-primary" onclick="document.getElementById('profile_picture_input').click();">
+                        Add Profile Picture
+                    </button>
                 @endif
 
                 {{-- Always show update --}}
-                <button type="button" class="btn btn-secondary" onclick="document.getElementById('profile_picture_input').click();"><strong>Update Picture</strong></button>
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('profile_picture_input').click();">
+                    <strong>Update Picture</strong>
+                </button>
+
+                {{-- Connection button --}}
+                <a href="{{ route('connections') }}" class="btn btn-primary">Connections</a>
+            </div>
             </form>
         </div>
     </div>
