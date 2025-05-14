@@ -33,6 +33,11 @@ Route::middleware([
     Route::get('/admin/home', [HomeController::class, 'homepage'])->name('admin.home');
 });
 
+Route::middleware(['auth'])->group(function () {
+    Route::get('/connections', [HomeController::class, 'connections'])->name('connections');
+    // other protected routes
+});
+
 // Home Route for Authenticated Users (redirect based on user type)
 Route::get('/home', [HomeController::class, 'homepage'])->middleware('auth')->name('home');
 

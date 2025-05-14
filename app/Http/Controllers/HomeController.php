@@ -461,6 +461,10 @@ public function connections()
 {
     $user = Auth::user();
 
+    if (!$user) {
+        return redirect()->route('login'); 
+    }
+
     $followers = $user->followers;
     $followings = $user->followings; // ✅ full user models
     $followingIds = $followings->pluck('id'); // ✅ for quick ID check
