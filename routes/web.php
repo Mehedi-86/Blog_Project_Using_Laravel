@@ -107,3 +107,21 @@ Route::get('/connections', [App\Http\Controllers\HomeController::class, 'connect
 Route::post('/follow/{id}', [App\Http\Controllers\HomeController::class, 'follow'])->name('follow');
 
 Route::post('/unfollow/{id}', [App\Http\Controllers\HomeController::class, 'unfollow'])->name('unfollow');
+
+Route::get('/user/{id}/details', [HomeController::class, 'userDetails'])->name('user.details');
+
+Route::post('/user/add/work', [HomeController::class, 'addWorkExperience'])->name('user.add.work');
+
+Route::post('/add-education', [HomeController::class, 'addEducation'])->name('user.add.education');
+
+Route::post('/update-address', [HomeController::class, 'updateAddress'])->name('user.update.address');
+
+Route::post('/update-basic-info', [HomeController::class, 'updateBasicInfo'])->name('user.update.basicinfo');
+
+Route::post('/profile/update-contact', [App\Http\Controllers\HomeController::class, 'updateContactInfo'])->name('profile.update.contact');
+
+Route::post('/profile/activity/add', [HomeController::class, 'addActivity'])->name('activity.add');
+
+Route::post('/profile/activity/{id}/update', [HomeController::class, 'updateActivity'])->name('activity.update');
+
+Route::delete('/profile/activity/{id}/delete', [HomeController::class, 'deleteActivity'])->name('activity.delete');

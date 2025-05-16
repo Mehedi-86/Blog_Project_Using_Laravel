@@ -231,6 +231,9 @@
 
                 {{-- Connection button --}}
                 <a href="{{ route('connections') }}" class="btn btn-primary">Connections</a>
+
+                {{-- Details button --}}
+                <a href="{{ route('user.details', $user->id) }}" class="btn btn-primary">Details</a>
             </div>
             </form>
         </div>

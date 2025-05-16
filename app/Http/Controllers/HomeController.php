@@ -14,6 +14,9 @@ use App\Models\Category;
 use App\Notifications\RepliedToComment;
 use App\Notifications\PostLiked;
 use App\Notifications\CommentedOnPost;
+use App\Models\WorkExperience;
+use App\Models\Education;
+use App\Models\ExtraCurricularActivity;
 
 
 class HomeController extends Controller
@@ -493,6 +496,173 @@ public function unfollow($id)
     $user->followings()->detach($id);
 
     return redirect()->back()->with('success', 'User unfollowed.');
+}
+
+public function userDetails($id)
+{
+    $user = User::with(['educations', 'workExperiences'])->findOrFail($id);
+    return view('home.user_details', compact('user'));
+}
+
+public function addWorkExperience(Request $request)
+{
+    $request->validate([
+        'workplace_name' => 'required|string|max:255',
+        'workplace_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        'designation' => 'nullable|string|max:255',
+        'year' => 'nullable|string|max:255',
+    ]);
+
+    $user = Auth::user();
+
+    $logoPath = null;
+    if ($request->hasFile('workplace_logo')) {
+        $logoPath = $request->file('workplace_logo')->store('work_logos', 'public');
+    }
+
+    $user->workExperiences()->create([
+        'workplace_name' => $request->workplace_name,
+        'workplace_logo' => $logoPath,
+        'designation' => $request->designation,
+        'year' => $request->year,
+    ]);
+
+    return redirect()->back()->with('success', 'Work experience added successfully!');
+}
+
+public function addEducation(Request $request)
+{
+    $request->validate([
+        'school_name' => 'required|string|max:255',
+        'graduation_year' => 'required|string|max:10', // allow both '2025' and 'Present'
+        'degree' => 'required|string|max:100',
+        'school_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
+
+    $logoPath = null;
+    if ($request->hasFile('school_logo')) {
+        $logoPath = $request->file('school_logo')->store('education_logos', 'public');
+    }
+
+    Education::create([
+        'user_id' => auth()->id(),
+        'school_name' => $request->school_name,
+        'graduation_year' => $request->graduation_year,
+        'degree' => $request->degree,
+        'school_logo' => $logoPath,
+    ]);
+
+    return redirect()->back()->with('success', 'Education added successfully!');
+}
+
+public function updateAddress(Request $request)
+{
+    $request->validate([
+        'present_address' => 'nullable|string|max:255',
+        'permanent_address' => 'nullable|string|max:255',
+    ]);
+
+    $user = auth()->user();
+    $user->present_address = $request->present_address;
+    $user->permanent_address = $request->permanent_address;
+    $user->save();
+
+    return back()->with('success', 'Address updated successfully!');
+}
+
+public function updateBasicInfo(Request $request)
+{
+    $request->validate([
+        'gender' => 'nullable|in:Male,Female,Other',
+        'dob' => 'nullable|date',
+        'relationship_status' => 'nullable|in:Single,In a Relationship,Married',
+    ]);
+
+    $user = auth()->user();
+    $user->gender = $request->gender;
+    $user->dob = $request->dob;
+    $user->relationship_status = $request->relationship_status;
+    $user->save();
+
+    return back()->with('success', 'Basic info updated successfully!');
+}
+
+public function updateContactInfo(Request $request)
+{
+    $request->validate([
+        'phone' => 'nullable|string|max:20',
+        'email' => 'required|email|max:255|unique:users,email,' . auth()->id(),
+    ]);
+
+    $user = auth()->user();
+    $user->update([
+        'phone' => $request->input('phone'),
+        'email' => $request->input('email'),
+    ]);
+
+    return redirect()->back()->with('success', 'Contact information updated successfully.');
+}
+
+public function addActivity(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'logo' => 'nullable|image|max:2048',
+        'duration' => 'required|string',
+        'description' => 'required|string|max:1000',
+        'github_link' => 'nullable|url',
+    ]);
+
+    $logoPath = null;
+    if ($request->hasFile('logo')) {
+        $logoPath = $request->file('logo')->store('activity_logos', 'public');
+    }
+
+    ExtraCurricularActivity::create([
+        'user_id' => Auth::id(),
+        'name' => $request->name,
+        'logo' => $logoPath,
+        'time_duration' => $request->duration,
+        'description' => $request->description,
+        'github_link' => $request->github_link,
+    ]);
+
+    return redirect()->back()->with('success', 'Activity added successfully!');
+}
+
+public function updateActivity(Request $request, $id)
+{
+    $activity = ExtraCurricularActivity::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'logo' => 'nullable|image|max:2048',
+        'time_duration' => 'required|string', // <-- fix this
+        'description' => 'required|string|max:1000',
+        'github_link' => 'nullable|url',
+    ]);    
+
+    if ($request->hasFile('logo')) {
+        $logoPath = $request->file('logo')->store('activity_logos', 'public');
+        $activity->logo = $logoPath;
+    }
+
+    $activity->update([
+        'name' => $request->name,
+        'time_duration' => $request->time_duration, // <-- fix here too
+        'description' => $request->description,
+        'github_link' => $request->github_link,
+    ]);    
+
+    return redirect()->back()->with('success', 'Activity updated successfully!');
+}
+
+public function deleteActivity($id)
+{
+    $activity = ExtraCurricularActivity::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+    $activity->delete();
+
+    return redirect()->back()->with('success', 'Activity deleted successfully!');
 }
 
 }

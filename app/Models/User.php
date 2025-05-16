@@ -32,6 +32,9 @@ class User extends Authenticatable
         'profile_picture',
         'phone',
         'usertype',
+        'gender',
+        'dob',
+        'relationship_status',
     ];
 
     /**
@@ -93,6 +96,21 @@ public function followers()
 public function followings()
 {
     return $this->belongsToMany(User::class, 'follows', 'follower_id', 'following_id');
+}
+
+public function workExperiences()
+{
+    return $this->hasMany(WorkExperience::class);
+}
+
+public function educations()
+{
+    return $this->hasMany(Education::class);
+}
+
+public function extraCurricularActivities()
+{
+    return $this->hasMany(ExtraCurricularActivity::class);
 }
 
 }
