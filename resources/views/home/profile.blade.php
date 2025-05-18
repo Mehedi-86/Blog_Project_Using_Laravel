@@ -50,7 +50,7 @@
         font-size: 1.8rem;
         font-weight: 700;
         margin-bottom: .5rem;
-        color: #2980b9;
+        color: #343a40;
         margin: 2rem 0 1rem;
         padding-top: 20px; /* Adds spacing between section titles */
     }
@@ -188,8 +188,15 @@
 
 <div class="container profile-container">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h5 class="profile-header mb-0">{{ $user->name }}'s Profile</h5>
-        <button id="darkModeToggle" onclick="toggleDarkMode()" class="btn btn-sm btn-outline-secondary">🌙 ↔️ ☀️</button>
+            <h5 class="profile-header mb-0">
+            <i class="fas fa-user-circle me-2" ></i>
+            {{ $user->name }}'s Profile
+        </h5>
+        <button id="darkModeToggle" onclick="toggleDarkMode()" class="btn btn-sm btn-outline-secondary text-white">
+            <i class="fas fa-moon me-1"></i>
+            <i class="fas fa-arrow-right-arrow-left me-1"></i>
+            <i class="fas fa-sun"></i>
+        </button>
     </div>              
 
     {{-- Profile Info --}}
@@ -304,7 +311,9 @@
 
     {{-- Saved Posts --}}
     <div class="mb-4">
-        <h4 class="section-title">Saved Posts</h4>
+        <h4 class="section-title">
+           <i class="fas fa-bookmark me-2"></i> Saved Posts
+        </h4>
         @forelse($savedPosts as $post)
             <div class="card p-3 mb-2">
                 <h5>{{ $post->title }}</h5>
@@ -318,7 +327,9 @@
 
     {{-- Liked Posts --}}
     <div class="mb-4">
-        <h4 class="section-title">Liked Posts</h4>
+        <h4 class="section-title">
+            <i class="fas fa-thumbs-up me-2"></i> Liked Posts
+        </h4>
         @forelse($likedPosts as $post)
             <div class="card p-3 mb-2">
                 <h5>{{ $post->title }}</h5>
@@ -332,7 +343,9 @@
 
     {{-- Comments --}}
     <div class="mb-4">
-        <h4 class="section-title">Comment On Posts</h4>
+        <h4 class="section-title">
+            <i class="fas fa-comment-dots me-2"></i> Comment On Posts
+        </h4>
                 @php
             $commentedPosts = $comments->groupBy('post_id')->map->first(); // Group and get first comment per post
         @endphp

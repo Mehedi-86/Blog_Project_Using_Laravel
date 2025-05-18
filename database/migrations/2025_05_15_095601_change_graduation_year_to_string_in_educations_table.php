@@ -9,7 +9,7 @@ class ChangeGraduationYearToStringInEducationsTable extends Migration
     public function up()
     {
         Schema::table('educations', function (Blueprint $table) {
-            $table->string('graduation_year')->change();    /*  2025, "Present",  "Expected 2026", "Ongoing"  */
+            $table->string('graduation_year')->change();    /*  2025, "Present", "Ongoing"  */
         });
     }
 

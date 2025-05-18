@@ -275,9 +275,11 @@
            <span>👁️ {{ $post->views }} views</span>
            </p>
            <div style="display: flex; justify-content: flex-end;">
-                <button id="darkModeToggle" onclick="toggleDarkMode()" class="btn btn-sm btn-outline-secondary">
-                    🌙 ↔️ ☀️
-                </button>
+            <button id="darkModeToggle" onclick="toggleDarkMode()" class="btn btn-sm btn-outline-secondary text-white">
+                <i class="fas fa-moon me-1"></i>
+                <i class="fas fa-arrow-right-arrow-left me-1"></i>
+                <i class="fas fa-sun"></i>
+            </button>
            </div>
         </div>
 

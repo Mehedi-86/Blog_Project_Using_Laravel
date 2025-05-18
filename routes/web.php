@@ -125,3 +125,18 @@ Route::post('/profile/activity/add', [HomeController::class, 'addActivity'])->na
 Route::post('/profile/activity/{id}/update', [HomeController::class, 'updateActivity'])->name('activity.update');
 
 Route::delete('/profile/activity/{id}/delete', [HomeController::class, 'deleteActivity'])->name('activity.delete');
+
+Route::post('/profile/work/{id}/update', [HomeController::class, 'updateWork'])->name('user.work.update');
+
+Route::delete('/profile/work/{id}/delete', [HomeController::class, 'deleteWork'])->name('user.work.delete');
+
+Route::post('/profile/education/{id}/update', [HomeController::class, 'updateEducation'])->name('user.education.update');
+
+Route::delete('/profile/education/{id}/delete', [HomeController::class, 'deleteEducation'])->name('user.education.delete');
+
+Route::delete('/user/delete-address', [HomeController::class, 'deleteAddress'])->name('user.delete.address');
+
+Route::delete('/profile/delete/contact', [HomeController::class, 'deleteContact'])->name('profile.delete.contact');
+
+Route::delete('/profile/basicinfo/delete', [HomeController::class, 'deleteBasicInfo'])->name('user.delete.basicinfo');
+

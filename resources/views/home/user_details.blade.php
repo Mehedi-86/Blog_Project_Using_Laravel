@@ -3,85 +3,126 @@
 <head>
     @include('home.homecss')
     <style>
-        .profile-section {
-            background: #fff;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
+    .profile-section {
+        background-color: #ffffff;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+        color: #495057; /* Gray text color */
+        transition: box-shadow 0.3s ease;
+    }
 
-        .section-title {
-            font-weight: 600;
-            font-size: 1.25rem;
-            border-bottom: 1px solid #dee2e6;
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
+    .profile-section:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
 
-        .section-item {
-            margin-bottom: 8px;
-        }
+    .section-title {
+        font-weight: 600;
+        font-size: 1.35rem;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 12px;
+        margin-bottom: 20px;
+        color: #343a40; /* Darker gray for section titles */
+    }
 
-        .add-btn {
-            font-size: 0.9rem;
-            color: #0d6efd;
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-        }
+    .section-item {
+        margin-bottom: 12px;
+        color: #495057; /* Medium gray */
+    }
 
-        .add-btn:hover {
-            text-decoration: underline;
-        }
-    </style>
+    .add-btn {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: #6c757d; /* Gray-blue */
+        background: none;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .add-btn:hover {
+        color: #495057;
+        text-decoration: underline;
+        background-color: rgba(108, 117, 125, 0.05); /* light gray hover */
+    }
+
+    .add-btn:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(108, 117, 125, 0.25);
+    }
+</style>
+
 </head>
 <body>
     <!-- Header -->
-    <div class="header_section">
+    <div class="header_section" style="margin-bottom: 30px;">
         @include('home.header')
     </div>
 
-    <div class="container mt-4 mb-4">
-        <h2 class="mb-4">User Profile Details</h2>
+    <div class="container mb-5" >
+       <h3 class="mb-4 text-center display-6 fw-bold" style="font-size: 2rem; color: #343a40;">
+            <i class="bi bi-person-circle me-2"></i> Profile Details
+        </h3>
 
         <!-- Work Section -->
 <div class="profile-section">
-    <div class="section-title">Work</div>
+
+   <div class="section-title fw-bold mb-3 fs-4"><i class="fas fa-briefcase me-3" style="color: #343a40;"></i>Work</div>
+
+    @if ($user->workExperiences->isEmpty())
+        <div class="section-item fs-6 fw-semibold">
+            No work experience added.
+        </div>
+    @else
+        <div class="section-item">
+            <ul class="list-group">
+            @foreach ($user->workExperiences as $workExperience)
+                <li class="list-group-item d-flex justify-content-between align-items-start mb-2">
+                    <div class="ms-2 me-auto fs-6">
+                        <div class="fw-bold">{{ $workExperience->workplace_name }}</div>
+
+                        @if ($workExperience->workplace_logo)
+                            <img src="{{ asset('storage/' . $workExperience->workplace_logo) }}" alt="Logo" width="70" class="mb-2 mt-3">
+                        @endif
+
+                        @if ($workExperience->designation)
+                            <div><strong>Designation:</strong> {{ $workExperience->designation }}</div>
+                        @endif
+
+                        @if ($workExperience->year)
+                            <div><strong>Year:</strong> {{ $workExperience->year }}</div>
+                        @endif
+                    </div>
+
+                    <div class="d-flex align-items-start gap-5">
+                        <!-- Edit Icon Button -->
+                        <button onclick="openEditWorkModal({{ $workExperience->id }}, '{{ addslashes($workExperience->workplace_name) }}', '{{ addslashes($workExperience->designation) }}', '{{ addslashes($workExperience->year) }}', '{{ $workExperience->workplace_logo }}')" 
+                          class="text-gray-500 hover:text-gray-800" title="Edit">
+                            <i class="fas fa-pen fa"></i>
+                        </button>
+
+                        <!-- Delete Icon Button -->
+                        <form action="{{ route('user.work.delete', $workExperience->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this work experience?')" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-500 hover:text-red-700" title="Delete">
+                                <i class="fas fa-trash-alt fa"></i>
+                            </button>
+                        </form>
+                    </div>
+                </li>
+            @endforeach
+            </ul>
+        </div>
+    @endif
 
     <div class="section-item">
         <!-- Show the "Add work experience" button whether work experience exists or not -->
         <button class="add-btn" onclick="toggleWorkForm()">Add work experience</button>
     </div>
 
-    @if ($user->workExperiences->isEmpty())
-        <div class="section-item">
-            No work experience added.
-        </div>
-    @else
-        <div class="section-item">
-            <ul>
-                @foreach ($user->workExperiences as $workExperience)
-                    <li>
-                        <strong>{{ $workExperience->workplace_name }}</strong><br>
-
-                        @if ($workExperience->workplace_logo)
-                            <img src="{{ asset('storage/' . $workExperience->workplace_logo) }}" alt="Logo" width="50"><br>
-                        @endif
-
-                        @if ($workExperience->designation)
-                            <p>Designation: {{ $workExperience->designation }}</p>
-                        @endif
-
-                        @if ($workExperience->year)
-                            <p>Year: {{ $workExperience->year }}</p>
-                        @endif
-                    </li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 
     <!-- Hidden form for adding work -->
     <div id="workForm" style="display: none; margin-top: 10px;">
@@ -112,14 +153,47 @@
     </div>
 </div>
 
+<!-- Edit Work Modal -->
+<div id="editWorkModal" style="display:none;" class="modal fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded shadow-lg w-full max-w-md">
+        <h3 class="text-lg font-bold mb-4">Edit Work Experience</h3>
+        <form method="POST" id="editWorkForm" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" name="id" id="editWorkId">
+
+            <label>Workplace Name:</label>
+            <input type="text" name="workplace_name" id="editWorkplaceName" class="form-control mb-2" required>
+
+            <label>Current Logo:</label>
+            <div id="currentWorkLogoContainer" class="mb-2">
+                <img id="currentWorkLogo" src="" width="80" class="rounded">
+            </div>
+
+            <label>New Logo (optional):</label>
+            <input type="file" name="workplace_logo" class="form-control mb-2">
+
+            <label>Designation:</label>
+            <textarea name="designation" id="editDesignation" class="form-control mb-2"></textarea>
+
+            <label>Year:</label>
+            <input type="text" name="year" id="editYear" class="form-control mb-4">
+
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="document.getElementById('editWorkModal').style.display='none'" class="btn btn-secondary">Cancel</button>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 
    <!-- Education Section -->
 <div class="profile-section">
-    <div class="section-title">Education</div>
+   <div class="section-title fw-bold mb-3 fs-4"><i class="fas fa-graduation-cap me-3" style="color: #343a40;"></i> Education</div>
 
     <!-- College / Higher Education Section -->
     <div class="section-item">
-        <h5>Higher Education</h5>
+        <h5 class="fw-semibold fs-6">Higher Education</h5>
 
         @php
             $highSchoolDegrees = ['high school', 'ssc', 'hsc', 'science', 'arts', 'commerce'];
@@ -133,51 +207,43 @@
             });
         @endphp
 
-
-
         @if ($collegeEducations->isEmpty())
-            <p>No college education added.</p>
+            <div class="section-item fs-6 fw-semibold">No college education added.</div>
         @else
-            <ul>
+            <ul class="list-group">
                 @foreach ($collegeEducations as $education)
-                    <li>
-                        <strong>{{ $education->school_name }}</strong><br>
-                        @if ($education->school_logo)
-                            <img src="{{ asset('storage/' . $education->school_logo) }}" alt="Logo" width="50">
-                        @endif
-                        <p>Degree: {{ $education->degree }}</p>
-                        <p>Graduation Year: {{ $education->graduation_year }}</p>
+                    <li class="list-group-item d-flex justify-content-between align-items-start mb-2">
+                        <div class="ms-2 me-auto fs-6">
+                            <div class="fw-bold">{{ $education->school_name }}</div>
+
+                            @if ($education->school_logo)
+                                <img src="{{ asset('storage/' . $education->school_logo) }}" alt="Logo" width="70" class="mb-2 mt-3">
+                            @endif
+
+                            <div><strong>Degree:</strong> {{ $education->degree }}</div>
+                            <div><strong>Graduation Year:</strong> {{ $education->graduation_year }}</div>
+                        </div>
+
+                        <div class="d-flex align-items-start gap-5">
+                            <button onclick='openEditEducationModal({{ $education->id }}, {{ json_encode($education->school_name) }}, {{ json_encode($education->degree) }}, {{ json_encode($education->graduation_year) }}, "{{ $education->school_logo }}")' 
+                               class="text-gray-500 hover:text-gray-800" title="Edit">
+                                <i class="fas fa-pen fa"></i>
+                            </button>
+
+                            <form action="{{ route('user.education.delete', $education->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this education entry?')" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:text-red-700" title="Delete">
+                                    <i class="fas fa-trash-alt fa"></i>
+                                </button>
+                            </form>
+                        </div>
                     </li>
                 @endforeach
             </ul>
         @endif
 
-        <button class="add-btn" onclick="toggleCollegeForm()">Add College</button>
-    </div>
-
-    <!-- High School Education Section -->
-    <div class="section-item">
-        <h5>High School Education</h5>
-
-
-        @if ($highSchoolEducations->isEmpty())
-            <p>No high school education added.</p>
-        @else
-            <ul>
-                @foreach ($highSchoolEducations as $education)
-                    <li>
-                        <strong>{{ $education->school_name }}</strong><br>
-                        @if ($education->school_logo)
-                            <img src="{{ asset('storage/' . $education->school_logo) }}" alt="Logo" width="50">
-                        @endif
-                        <p>Degree: {{ $education->degree }}</p>
-                        <p>Graduation Year: {{ $education->graduation_year }}</p>
-                    </li>
-                @endforeach
-            </ul>
-        @endif
-
-        <button class="add-btn" onclick="toggleHighSchoolForm()">Add High School</button>
+        <button class="add-btn mt-2" onclick="toggleCollegeForm()">Add College</button>
     </div>
 
     <!-- Hidden Form for Adding College -->
@@ -215,6 +281,84 @@
         </form>
     </div>
 
+
+    <!-- High School Education Section -->
+    <div class="section-item mt-4">
+        <h5 class="fw-semibold fs-6">High School Education</h5>
+
+        @if ($highSchoolEducations->isEmpty())
+            <div class="section-item fs-6 fw-semibold">No high school education added.</div>
+        @else
+            <ul class="list-group">
+                @foreach ($highSchoolEducations as $education)
+                    <li class="list-group-item d-flex justify-content-between align-items-start mb-2">
+                        <div class="ms-2 me-auto fs-6">
+                            <div class="fw-bold">{{ $education->school_name }}</div>
+
+                            @if ($education->school_logo)
+                                <img src="{{ asset('storage/' . $education->school_logo) }}" alt="Logo" width="70" class="mb-2 mt-3">
+                            @endif
+
+                            <div><strong>Degree:</strong> {{ $education->degree }}</div>
+                            <div><strong>Graduation Year:</strong> {{ $education->graduation_year }}</div>
+                        </div>
+
+                        <div class="d-flex align-items-start gap-5">
+                            <button onclick='openEditEducationModal({{ $education->id }}, {{ json_encode($education->school_name) }}, {{ json_encode($education->degree) }}, {{ json_encode($education->graduation_year) }}, "{{ $education->school_logo }}")' 
+                                class="text-gray-500 hover:text-gray-800" title="Edit">
+                                <i class="fas fa-pen fa"></i>
+                            </button>
+
+                            <form action="{{ route('user.education.delete', $education->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this education entry?')" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-500 hover:text-red-700" title="Delete">
+                                    <i class="fas fa-trash-alt fa"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+
+        <button class="add-btn mt-2" onclick="toggleHighSchoolForm()">Add High School</button>
+    </div>
+
+
+    <!-- Edit Education Modal -->
+<div id="editEducationModal" style="display:none;" class="modal fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white p-6 rounded shadow-lg w-full max-w-md">
+        <h3 class="text-lg font-bold mb-4">Edit Education</h3>
+        <form method="POST" id="editEducationForm" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" name="id" id="editEducationId">
+
+            <label>School Name:</label>
+            <input type="text" name="school_name" id="editSchoolName" class="form-control mb-2" required>
+
+            <label>Current Logo:</label>
+            <div id="currentSchoolLogoContainer" class="mb-2">
+                <img id="currentSchoolLogo" src="" width="80" class="rounded">
+            </div>
+
+            <label>New Logo (optional):</label>
+            <input type="file" name="school_logo" class="form-control mb-2">
+
+            <label>Degree:</label>
+            <input type="text" name="degree" id="editDegree" class="form-control mb-2">
+
+            <label>Graduation Year:</label>
+            <input type="text" name="graduation_year" id="editGraduationYear" class="form-control mb-4">
+
+            <div class="flex justify-end gap-2">
+                <button type="button" onclick="document.getElementById('editEducationModal').style.display='none'" class="btn btn-secondary">Cancel</button>
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
     <!-- Hidden Form for Adding High School -->
     <div id="highSchoolForm" style="display: none; margin-top: 10px;">
         <form action="{{ route('user.add.education') }}" method="POST" enctype="multipart/form-data">
@@ -237,7 +381,7 @@
                         <option value="Arts">Arts</option>
                         <option value="Commerce">Commerce</option>
                         <option value="SSC">SSC</option>
-                        <option value="SSC">HSC</option>
+                        <option value="HSC">HSC</option>
                         <option value="High School">High School</option>
                     </select>
             </div>
@@ -255,28 +399,54 @@
 
 
 
-       <!-- Places lived -->
+     <!-- Places Lived -->
 <div class="profile-section">
-    <div class="section-title">Places Lived</div>
-
-    <div class="section-item">
-        <button class="add-btn" onclick="toggleAddressForm()">Edit address</button>
-    </div>
+  <div class="section-title fw-bold mb-3 fs-4"> <i class="fas fa-map-marker-alt me-3" style="color: #343a40;"></i> Places Lived</div>
 
     @if ($user->present_address || $user->permanent_address)
         <div class="section-item">
-            @if ($user->present_address)
-                <p><strong>Present Address:</strong> {{ $user->present_address }}</p>
-            @endif
-            @if ($user->permanent_address)
-                <p><strong>Permanent Address:</strong> {{ $user->permanent_address }}</p>
-            @endif
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-start mb-2">
+                    <div class="ms-2 me-auto fs-6">
+                        @if ($user->present_address)
+                            <div style="margin-bottom: 0.5rem"><strong>Present Address:</strong> {{ $user->present_address }}</div>
+                        @endif
+
+                        @if ($user->permanent_address)
+                            <div><strong>Permanent Address:</strong> {{ $user->permanent_address }}</div>
+                        @endif
+                    </div>
+
+                    <div class="d-flex align-items-start gap-5">
+                        <!-- Edit Button -->
+                        <button onclick="toggleAddressForm()" class="text-gray-500 hover:text-gray-800" title="Edit">
+                            <i class="fas fa-pen fa"></i>
+                        </button>
+
+                        <!-- Delete Button -->
+                        <form action="{{ route('user.delete.address') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete your address?')" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-500 hover:text-red-700" title="Delete">
+                                <i class="fas fa-trash-alt fa"></i>
+                            </button>
+                        </form>
+                    </div>
+                </li>
+            </ul>
         </div>
     @else
-        <div class="section-item">No address added.</div>
+        <div class="section-item fs-6 fw-semibold d-flex justify-content-between align-items-center">
+            No address added.
+
+            <!-- Edit Button always visible even if no address -->
+            <button onclick="toggleAddressForm()" class="text-gray-500 hover:text-gray-800 ms-auto" title="Add Address">
+                <i class="fas fa-pen fa"></i>
+            </button>
+        </div>
     @endif
 
-    <!-- Hidden form -->
+    <!-- Inline Edit Form -->
     <div id="addressForm" style="display: none; margin-top: 10px;">
         <form action="{{ route('user.update.address') }}" method="POST">
             @csrf
@@ -296,51 +466,121 @@
 </div>
 
 
-        <!-- Contact info -->
+      <!-- Contact Info -->
 <div class="profile-section">
-    <div class="section-title">Contact Info</div>
-    <div class="section-item"><strong>Mobile:</strong> {{ $user->phone ?? 'Not added' }}</div>
-    <div class="section-item"><strong>Email:</strong> {{ $user->email }}</div>
-    <button class="edit-btn" onclick="toggleContactForm()">Edit Info</button>
+  <div class="section-title fw-bold mb-3 fs-4"><i class="fas fa-phone-alt me-3" style="color: #343a40;"></i> Contact Info</div>
 
-    <!-- Inline Edit Form (Initially Hidden) -->
-    <div id="contactEditForm" style="display: none; margin-top: 15px;">
+    @if ($user->phone || $user->email)
+        <div class="section-item">
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-start mb-2">
+                    <div class="ms-2 me-auto fs-6">
+                        @if ($user->phone)
+                            <div style="margin-bottom: 0.5rem;"><strong>Mobile:</strong> {{ $user->phone }}</div>
+                        @endif
+
+                        @if ($user->email)
+                            <div><strong>Email:</strong> {{ $user->email }}</div>
+                        @endif
+                    </div>
+
+                    <div class="d-flex align-items-start gap-5">
+                        <!-- Edit Icon Button -->
+                        <button onclick="toggleContactForm()" class="text-gray-500 hover:text-gray-800" title="Edit Contact Info">
+                            <i class="fas fa-pen fa"></i>
+                        </button>
+
+                        <!-- Delete Icon Button -->
+                        <form action="{{ route('profile.delete.contact') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete your contact info?')" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-500 hover:text-red-700" title="Delete Contact Info">
+                                <i class="fas fa-trash-alt fa"></i>
+                            </button>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    @else
+        <div class="section-item fs-6 fw-semibold">
+            No contact info added.
+        </div>
+    @endif
+
+    <!-- Inline Edit Form -->
+    <div id="contactEditForm" style="display: none; margin-top: 10px;">
         <form method="POST" action="{{ route('profile.update.contact') }}">
             @csrf
-            @method('POST')
 
-            <div style="margin-bottom: 10px;">
-                <label for="phone"><strong>Mobile:</strong></label><br>
-                <input type="text" name="phone" id="phone" value="{{ old('phone', $user->phone) }}" class="form-input">
+            <div class="mb-2">
+                <label for="phone" class="form-label"><strong>Mobile:</strong></label>
+                <input type="text" name="phone" id="phone" value="{{ old('phone', $user->phone) }}" class="form-control">
             </div>
 
-            <div style="margin-bottom: 10px;">
-                <label for="email"><strong>Email:</strong></label><br>
-                <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" class="form-input">
+            <div class="mb-2">
+                <label for="email" class="form-label"><strong>Email:</strong></label>
+                <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" class="form-control">
             </div>
 
-            <div>
-                <button type="submit" class="btn-save">Save</button>
-                <button type="button" onclick="toggleContactForm()" class="btn-cancel">Cancel</button>
-            </div>
+            <button type="submit" class="btn btn-success mt-2">Save</button>
         </form>
     </div>
 </div>
 
 
-        <!-- Basic info -->
+      <!-- Basic Info -->
 <div class="profile-section">
-    <div class="section-title">Basic Info</div>
+   <div class="section-title fw-bold mb-3 fs-4"><i class="fas fa-user-tag me-3" style="color: #343a40;"></i> Basic Info</div>
 
-    <div class="section-item">
-        <button class="add-btn" onclick="toggleBasicInfoForm()">Edit Basic Info</button>
-    </div>
+    @if ($user->gender || $user->dob || $user->relationship_status)
+        <div class="section-item">
+            <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-start mb-2">
+                    <div class="ms-2 me-auto fs-6">
+                        @if ($user->gender)
+                            <div style="margin-bottom: 0.5rem;"><strong>Gender:</strong> {{ $user->gender }}</div>
+                        @endif
 
-    <div class="section-item"><strong>Gender:</strong> {{ $user->gender ?? 'Not added' }}</div>
-    <div class="section-item"><strong>Date of Birth:</strong> {{ $user->dob ?? 'Not added' }}</div>
-    <div class="section-item"><strong>Relationship Status:</strong> {{ $user->relationship_status ?? 'Not added' }}</div>
+                        @if ($user->dob)
+                            <div style="margin-bottom: 0.5rem;"><strong>Date of Birth:</strong> {{ $user->dob }}</div>
+                        @endif
 
-    <!-- Hidden form -->
+                        @if ($user->relationship_status)
+                            <div><strong>Relationship Status:</strong> {{ $user->relationship_status }}</div>
+                        @endif
+                    </div>
+
+                    <div class="d-flex align-items-start gap-5">
+                        <!-- Edit Icon Button -->
+                        <button onclick="toggleBasicInfoForm()" class="text-gray-500 hover:text-gray-800" title="Edit Basic Info">
+                            <i class="fas fa-pen fa"></i>
+                        </button>
+
+                        <!-- Delete Icon Button -->
+                        <form action="{{ route('user.delete.basicinfo') }}" method="POST" onsubmit="return confirm('Are you sure you want to delete your basic info?')" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-500 hover:text-red-700" title="Delete Basic Info">
+                                <i class="fas fa-trash-alt fa"></i>
+                            </button>
+                        </form>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    @else
+        <div class="section-item fs-6 fw-semibold d-flex justify-content-between align-items-center">
+            No basic info added.
+
+            <!-- Edit icon always visible -->
+            <button onclick="toggleBasicInfoForm()" class="text-gray-500 hover:text-gray-800 ms-auto" title="Add Basic Info">
+                <i class="fas fa-pen fa"></i>
+            </button>
+        </div>
+    @endif
+
+    <!-- Inline Edit Form -->
     <div id="basicInfoForm" style="display: none; margin-top: 10px;">
         <form action="{{ route('user.update.basicinfo') }}" method="POST">
             @csrf
@@ -376,54 +616,70 @@
 </div>
 
 
-       <!-- Extra Curricular Activities -->
+      <!-- Extra Curricular Activities -->
 <div class="profile-section">
-    <div class="section-title">Extra Curricular Activities</div>
+   <div class="section-title fw-bold mb-3 fs-4"><i class="fas fa-medal me-3" style="color: #343a40;"></i> Extra Curricular Activities</div>
+
 
     @if($user->extraCurricularActivities && $user->extraCurricularActivities->isNotEmpty())
-        @foreach($user->extraCurricularActivities as $activity)
-            <div class="section-item border p-3 mb-3 rounded shadow-sm">
-                <div class="flex items-center gap-4">
-                    @if($activity->logo)
-                        <img src="{{ asset('storage/' . $activity->logo) }}" width="50" height="50" class="rounded">
-                    @endif
-                    <div>
-                        <strong>{{ $activity->name }}</strong><br>
-                        <small>{{ $activity->time_duration }}</small>
+        <ul class="list-group">
+            @foreach($user->extraCurricularActivities as $activity)
+                <li class="list-group-item d-flex justify-content-between align-items-start mb-3 shadow-sm rounded border">
+                    <div class="ms-2 me-auto">
+                        <div class="d-flex align-items-center gap-3 mb-2">
+                            @if($activity->logo)
+                                <img src="{{ asset('storage/' . $activity->logo) }}" width="75" height="75" class="rounded">
+                            @endif
+                            <div class="fs-6">
+                                <strong>{{ $activity->name }}</strong><br>
+                                <small>{{ $activity->time_duration }}</small>
+                            </div>
+                        </div>
+                        <div class="fs-6">{{ $activity->description }}</div>
+                        @if($activity->github_link)
+                            <div class="mt-1">
+                                <a href="{{ $activity->github_link }}" target="_blank" class="text-primary">
+                                    <i class="fab fa-github me-1" style="color: #343a40;"></i> GitHub Link
+                                </a>
+                            </div>
+                        @endif
                     </div>
-                </div>
-                <p class="mt-2">{{ $activity->description }}</p>
-                @if($activity->github_link)
-                    <p><a href="{{ $activity->github_link }}" target="_blank" class="text-blue-500 underline">GitHub Link</a></p>
-                @endif
 
-                <div class="flex gap-2 mt-2">
-                    <!-- Edit Button -->
-                    <button onclick="openEditActivityModal(
-                        {{ $activity->id }},
-                        '{{ addslashes($activity->name) }}',
-                        '{{ addslashes($activity->time_duration) }}',
-                        '{{ addslashes($activity->description) }}',
-                        '{{ $activity->github_link }}',
-                        '{{ $activity->logo }}'
-                    )" class="btn btn-sm btn-primary">Edit</button>
+                    <div class="d-flex align-items-start gap-5">
+                        <!-- Edit Icon -->
+                        <button onclick="openEditActivityModal(
+                            {{ $activity->id }},
+                            '{{ addslashes($activity->name) }}',
+                            '{{ addslashes($activity->time_duration) }}',
+                            '{{ addslashes($activity->description) }}',
+                            '{{ $activity->github_link }}',
+                            '{{ $activity->logo }}'
+                        )" 
+                           class="text-gray-500 hover:text-gray-800" title="Edit Activity">
+                           <i class="fas fa-pen fa"></i>
+                        </button>
 
-                    <!-- Delete Form -->
-                    <form action="{{ route('activity.delete', $activity->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this activity?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                    </form>
-                </div>
-            </div>
-        @endforeach
+                        <!-- Delete Icon -->
+                        <form action="{{ route('activity.delete', $activity->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this activity?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-danger border-0 bg-transparent p-0" title="Delete Activity">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </div>
+                </li>
+            @endforeach
+        </ul>
     @else
-        <div class="section-item">No Extra Curricular Activities added.</div>
+        <div class="section-item fs-6 fw-semibold">No Extra Curricular Activities added.</div>
     @endif
 
     <!-- Add Button -->
-    <button class="add-btn mt-2" onclick="document.getElementById('addActivityModal').style.display='flex'">Add Activity</button>
+    <button class="add-btn mt-3" onclick="document.getElementById('addActivityModal').style.display='flex'">Add Activity</button>
 </div>
+
+
 
 <!-- Add Activity Modal -->
 <div id="addActivityModal" style="display:none;" class="modal fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
@@ -565,6 +821,42 @@ function openEditActivityModal(id, name, time_duration, description, github_link
     document.getElementById('editActivityModal').style.display = 'flex';
 }
 
+</script>
+
+<script>
+    function openEditWorkModal(id, name, designation, year, logo) {
+        const form = document.getElementById('editWorkForm');
+        form.action = `/profile/work/${id}/update`; // Ensure this route exists
+
+        document.getElementById('editWorkId').value = id;
+        document.getElementById('editWorkplaceName').value = name;
+        document.getElementById('editDesignation').value = designation;
+        document.getElementById('editYear').value = year;
+
+        const logoUrl = `/storage/${logo}`;
+        document.getElementById('currentWorkLogo').src = logoUrl;
+
+        document.getElementById('editWorkModal').style.display = 'flex';
+    }
+</script>
+
+<script>
+function openEditEducationModal(id, schoolName, degree, graduationYear, logoPath) {
+    document.getElementById('editEducationForm').action = `/profile/education/${id}/update`;
+    document.getElementById('editEducationId').value = id;
+    document.getElementById('editSchoolName').value = schoolName;
+    document.getElementById('editDegree').value = degree;
+    document.getElementById('editGraduationYear').value = graduationYear;
+
+    if (logoPath) {
+        document.getElementById('currentSchoolLogo').src = `/storage/${logoPath}`;
+        document.getElementById('currentSchoolLogoContainer').style.display = 'block';
+    } else {
+        document.getElementById('currentSchoolLogoContainer').style.display = 'none';
+    }
+
+    document.getElementById('editEducationModal').style.display = 'flex';
+}
 </script>
 
 </body>

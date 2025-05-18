@@ -665,4 +665,108 @@ public function deleteActivity($id)
     return redirect()->back()->with('success', 'Activity deleted successfully!');
 }
 
+public function updateWork(Request $request, $id)
+{
+    $work = WorkExperience::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+
+    $request->validate([
+        'workplace_name' => 'required|string|max:255',
+        'workplace_logo' => 'nullable|image|max:2048',
+        'designation' => 'nullable|string|max:500',
+        'year' => 'nullable|string|max:255',
+    ]);
+
+    if ($request->hasFile('workplace_logo')) {
+        $logoPath = $request->file('workplace_logo')->store('work_logos', 'public');
+        $work->workplace_logo = $logoPath;
+    }
+
+    $work->update([
+        'workplace_name' => $request->workplace_name,
+        'designation' => $request->designation,
+        'year' => $request->year,
+    ]);
+
+    return redirect()->back()->with('success', 'Work experience updated successfully!');
+}
+
+public function deleteWork($id)
+{
+    $work = WorkExperience::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+    $work->delete();
+
+    return redirect()->back()->with('success', 'Work experience deleted successfully!');
+}
+
+public function updateEducation(Request $request, $id)
+{
+    $education = Education::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+
+    $request->validate([
+        'school_name' => 'required|string|max:255',
+        'school_logo' => 'nullable|image|max:2048',
+        'degree' => 'required|string|max:255',
+        'graduation_year' => 'required|string|max:255',
+    ]);
+
+    if ($request->hasFile('school_logo')) {
+        $logoPath = $request->file('school_logo')->store('school_logos', 'public');
+        $education->school_logo = $logoPath;
+    }
+
+    $education->update([
+        'school_name' => $request->school_name,
+        'degree' => $request->degree,
+        'graduation_year' => $request->graduation_year,
+    ]);
+
+    return redirect()->back()->with('success', 'Education updated successfully!');
+}
+
+public function deleteEducation($id)
+{
+    $education = Education::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
+    $education->delete();
+
+    return redirect()->back()->with('success', 'Education deleted successfully!');
+}
+
+public function deleteAddress(Request $request)
+{
+    $user = auth()->user();
+
+    // Clear both present and permanent address
+    $user->present_address = null;
+    $user->permanent_address = null;
+    $user->save();
+
+    return redirect()->back()->with('success', 'Address deleted successfully.');
+}
+
+public function deleteContact(Request $request)
+{
+    $user = auth()->user();
+    $user->phone = null;
+
+    // Optionally also delete email, but it's usually required:
+    // $user->email = null;
+
+    $user->save();
+
+    return redirect()->back()->with('success', 'Contact info deleted successfully.');
+}
+
+public function deleteBasicInfo(Request $request)
+{
+    $user = auth()->user();
+
+    $user->gender = null;
+    $user->dob = null;
+    $user->relationship_status = null;
+
+    $user->save();
+
+    return back()->with('success', 'Basic info deleted successfully.');
+}
+
 }
