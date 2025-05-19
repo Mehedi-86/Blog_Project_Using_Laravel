@@ -322,6 +322,12 @@
         @empty
             <p class="no-data-text">No saved posts yet.</p>
         @endforelse
+
+         <!-- Pagination save -->
+         <div class="mt-3">
+            {{ $savedPosts->withQueryString()->links() }}
+        </div>
+        
     </div>
 
 
@@ -338,28 +344,36 @@
         @empty
             <p class="no-data-text">No liked posts yet.</p>
         @endforelse
+
+         <!-- Pagination Links -->
+         <div class="mt-3">
+            {{ $likedPosts->links() }}
+        </div>
+
     </div>
     
 
     {{-- Comments --}}
-    <div class="mb-4">
-        <h4 class="section-title">
-            <i class="fas fa-comment-dots me-2"></i> Comment On Posts
-        </h4>
-                @php
-            $commentedPosts = $comments->groupBy('post_id')->map->first(); // Group and get first comment per post
-        @endphp
+<div class="mb-4">
+    <h4 class="section-title">
+        <i class="fas fa-comment-dots me-2"></i> Comment On Posts
+    </h4>
 
-        @forelse($commentedPosts as $comment)
-            <div class="card p-3 mb-2">
-                <h5>{{ $comment->post->title ?? 'Unknown' }}</h5>
-                <p>You've commented on this post.</p>
-                <a href="{{ url('post_details', $comment->post_id) }}">View Post</a>
-            </div>
-        @empty
-            <p class="no-data-text">No comments yet.</p>
-        @endforelse
+    @forelse($commentedPosts as $post)
+        <div class="card p-3 mb-2">
+            <h5>{{ $post->title }}</h5>
+            <p>You’ve commented on this post.</p>
+            <a href="{{ url('post_details', $post->id) }}">View Post</a>
+        </div>
+    @empty
+        <p class="no-data-text">No comments yet.</p>
+    @endforelse
+
+    <!-- Pagination -->
+    <div class="mt-3">
+        {{ $commentedPosts->withQueryString()->links() }}
     </div>
+</div>
 </div>
 
 {{-- JavaScript to hide error message after 3 seconds --}}

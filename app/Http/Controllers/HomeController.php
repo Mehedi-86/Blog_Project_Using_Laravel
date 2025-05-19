@@ -390,19 +390,28 @@ public function increase_view($id)
 public function profile($id)
 {
     $user = User::findOrFail($id);
-    $comments = Comment::where('user_id', $id)->latest()->get();
-    $likedPosts = $user->likedPosts()->latest()->get();
-    $savedPosts = $user->savedPosts()->latest()->get();
 
-    // Only fetch notifications for the currently authenticated user viewing their own profile
+    // Get distinct post_ids from comments by this user
+    $commentedPostIds = Comment::where('user_id', $id)
+        ->select('post_id')
+        ->distinct()
+        ->pluck('post_id');
+
+    // Paginate the posts that the user commented on (each only once)
+    $commentedPosts = Post::whereIn('id', $commentedPostIds)
+        ->latest()
+        ->paginate(5, ['*'], 'commentPage');
+
+    $likedPosts = $user->likedPosts()->latest()->paginate(5, ['*'], 'likedPage');
+    $savedPosts = $user->savedPosts()->latest()->paginate(5, ['*'], 'savedPage');
+
     $notifications = [];
     if (auth()->id() === $user->id) {
         $notifications = $user->unreadNotifications;
-        // Mark each notification as read
-        $user->unreadNotifications->each->markAsRead(); // Marks all unread notifications as read
+        $user->unreadNotifications->each->markAsRead();
     }
 
-    return view('home.profile', compact('user', 'comments', 'likedPosts', 'savedPosts', 'notifications'));
+    return view('home.profile', compact('user', 'commentedPosts', 'likedPosts', 'savedPosts', 'notifications'));
 }
 
 

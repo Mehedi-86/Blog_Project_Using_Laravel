@@ -272,7 +272,7 @@
           <p class="text-muted mb-1">
            Post by <b>{{ $post->name }}</b>
            <span style="margin-left: 30px; margin-right: 30px;">|</span>
-           <span>👁️ {{ $post->views }} views</span>
+           <span><i class="fas fa-eye me-2"></i>{{ $post->views }} views</span>
            </p>
            <div style="display: flex; justify-content: flex-end;">
             <button id="darkModeToggle" onclick="toggleDarkMode()" class="btn btn-sm btn-outline-secondary text-white">
@@ -480,29 +480,31 @@
     @endforeach
 </div>
 
-<!-- Edit Comment Modal -->
-<div class="modal fade" id="editCommentModal" tabindex="-1" aria-labelledby="editCommentModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <form id="editCommentForm" method="POST">
-            @csrf
-            @method('PUT')
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editCommentModalLabel">Edit Comment</h5>
+    <!-- Edit Comment Modal -->
+    <div class="modal fade" id="editCommentModal" tabindex="-1" aria-labelledby="editCommentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form id="editCommentForm" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editCommentModalLabel">Edit Comment</h5>
+                    </div>
+                    <div class="modal-body">
+                        <textarea id="editCommentBody" name="body" class="form-control" rows="4" required></textarea>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
                 </div>
-                <div class="modal-body">
-                    <textarea id="editCommentBody" name="body" class="form-control" rows="4" required></textarea>
-                </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Update</button>
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 
 </div> <!-- End of comment-section -->
+</div> 
+</div> 
 
 <script>
 function toggleReplyForm(commentId) {

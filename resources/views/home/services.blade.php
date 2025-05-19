@@ -65,7 +65,7 @@
                             <p class="text-muted mb-1">
                             Post by <b>{{ $post->name }}</b>
                             <span style="margin-left: 10px; margin-right: 10px;">|</span>
-                            <span>👁️ {{ $post->views }} views</span>
+                            <span><i class="fas fa-eye me-1"></i> {{ $post->views }} views</span>
                             </p>
                             <div class="btn_main mt-auto">
                                 <a href="#" class="read-more" data-post-id="{{ $post->id }}" data-href="{{ url('post_details', $post->id) }}">Read more</a>
