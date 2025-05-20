@@ -140,3 +140,6 @@ Route::delete('/profile/delete/contact', [HomeController::class, 'deleteContact'
 
 Route::delete('/profile/basicinfo/delete', [HomeController::class, 'deleteBasicInfo'])->name('user.delete.basicinfo');
 
+Route::get('/user/view/{id}', [HomeController::class, 'userView'])->name('user.view');
+
+Route::get('/user/view-details/{id}', [HomeController::class, 'viewUserDetails'])->name('user.viewDetails');

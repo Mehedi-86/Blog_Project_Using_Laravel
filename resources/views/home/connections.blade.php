@@ -120,7 +120,26 @@
 
     <!-- Inside Main Content -->
 <div class="container tight-container">
-    <h1 class="section-title"><i class="bi bi-people-fill me-2"></i>Connections</h1>
+<div class="container">
+    <div class="row align-items-center mb-4">
+        <!-- Left-aligned Back Button -->
+        <div class="col text-start">
+            <a href="{{ route('user.profile', ['id' => $user->id]) }}"
+            class="btn shadow-sm rounded-circle px-2 py-1" style="background-color: #e9ecef; color: #495057; border: 1px solid #ced4da;"> <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+
+        <!-- Centered Title -->
+        <div class="col text-center">
+            <h1 class="section-title mb-0" style="font-size: 2rem;">
+                <i class="bi bi-people-fill me-2"></i>Connections
+            </h1>
+        </div>
+
+        <!-- Right Empty Column to Balance Layout -->
+        <div class="col"></div>
+    </div>
+</div>
 
     <ul class="nav nav-tabs mb-4" id="connectionTabs" role="tablist">
         <li class="nav-item">
@@ -141,69 +160,77 @@
     </ul>
 
     <div class="tab-content">
-        <!-- Followers Tab -->
-        <div class="tab-pane fade show active" id="followers">
-            @forelse ($followers as $follower)
-                <div class="connection-card">
-                    <div class="user-info">
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode($follower->name) }}" class="user-avatar" alt="{{ $follower->name }}">
+    <!-- Followers Tab -->
+    <div class="tab-pane fade show active" id="followers">
+        @forelse ($followers as $follower)
+            <div class="connection-card">
+                <div class="user-info">
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode($follower->name) }}" class="user-avatar" alt="{{ $follower->name }}">
+                    @if ($followingIds->contains($follower->id))
+                        <a href="{{ route('user.view', $follower->id) }}" class="user-name">{{ $follower->name }}</a>
+                    @else
                         <p class="user-name">{{ $follower->name }}</p>
-                    </div>
-                    <div>
-                        @if ($followingIds->contains($follower->id))
-                            <form action="{{ route('unfollow', $follower->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-unfollow"><i class="bi bi-person-dash-fill"></i> Unfollow</button>
-                            </form>
-                        @else
-                            <form action="{{ route('follow', $follower->id) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-follow"><i class="bi bi-person-plus-fill"></i> Follow</button>
-                            </form>
-                        @endif
-                    </div>
+                    @endif
                 </div>
-            @empty
-                <p>No followers yet.</p>
-            @endforelse
-        </div>
-
-        <!-- Followings Tab -->
-        <div class="tab-pane fade" id="followings">
-            @forelse ($followings as $following)
-                <div class="connection-card">
-                    <div class="user-info">
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode($following->name) }}" class="user-avatar" alt="{{ $following->name }}">
-                        <p class="user-name">{{ $following->name }}</p>
-                    </div>
-                    <form action="{{ route('unfollow', $following->id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-unfollow"><i class="bi bi-person-dash-fill"></i> Unfollow</button>
-                    </form>
+                <div>
+                    @if ($followingIds->contains($follower->id))
+                        <form action="{{ route('unfollow', $follower->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-unfollow"><i class="bi bi-person-dash-fill"></i> Unfollow</button>
+                        </form>
+                    @else
+                        <form action="{{ route('follow', $follower->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-follow"><i class="bi bi-person-plus-fill"></i> Follow</button>
+                        </form>
+                    @endif
                 </div>
-            @empty
-                <p>You are not following anyone.</p>
-            @endforelse
-        </div>
-
-        <!-- Suggestions Tab -->
-        <div class="tab-pane fade" id="suggestions">
-            @forelse ($suggestions as $suggested)
-                <div class="connection-card">
-                    <div class="user-info">
-                        <img src="https://ui-avatars.com/api/?name={{ urlencode($suggested->name) }}" class="user-avatar" alt="{{ $suggested->name }}">
-                        <p class="user-name">{{ $suggested->name }}</p>
-                    </div>
-                    <form action="{{ route('follow', $suggested->id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-follow"><i class="bi bi-person-plus-fill"></i> Follow</button>
-                    </form>
-                </div>
-            @empty
-                <p>No suggestions available.</p>
-            @endforelse
-        </div>
+            </div>
+        @empty
+            <p>No followers yet.</p>
+        @endforelse
     </div>
+
+    <!-- Followings Tab -->
+    <div class="tab-pane fade" id="followings">
+        @forelse ($followings as $following)
+            <div class="connection-card">
+                <div class="user-info">
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode($following->name) }}" class="user-avatar" alt="{{ $following->name }}">
+                    <a href="{{ route('user.view', $following->id) }}" class="user-name">{{ $following->name }}</a>
+                </div>
+                <form action="{{ route('unfollow', $following->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-unfollow"><i class="bi bi-person-dash-fill"></i> Unfollow</button>
+                </form>
+            </div>
+        @empty
+            <p>You are not following anyone.</p>
+        @endforelse
+    </div>
+
+    <!-- Suggestions Tab -->
+    <div class="tab-pane fade" id="suggestions">
+        @forelse ($suggestions as $suggested)
+            <div class="connection-card">
+                <div class="user-info">
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode($suggested->name) }}" class="user-avatar" alt="{{ $suggested->name }}">
+                    @if ($followingIds->contains($suggested->id))
+                        <a href="{{ route('user.view', $suggested->id) }}" class="user-name">{{ $suggested->name }}</a>
+                    @else
+                        <p class="user-name">{{ $suggested->name }}</p>
+                    @endif
+                </div>
+                <form action="{{ route('follow', $suggested->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-follow"><i class="bi bi-person-plus-fill"></i> Follow</button>
+                </form>
+            </div>
+        @empty
+            <p>No suggestions available.</p>
+        @endforelse
+    </div>
+</div>
 </div>
 
     <!-- Footer -->

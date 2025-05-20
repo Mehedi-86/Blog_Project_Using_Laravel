@@ -194,7 +194,7 @@
     </div>
 
     <div class="container">
-        <h1 class="title_deg">Add Post</h1>
+        <h1 class="title_deg"><i class="fas fa-plus-circle" style="margin-right: 20px;"></i>Add Post</h1>
 
         <div class="form-wrapper">
             <form action="{{ url('user_post') }}" method="POST" enctype="multipart/form-data">

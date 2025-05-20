@@ -186,7 +186,7 @@
     </div>
 
     <!-- heading that show My Posts-->
-    <h2 style="text-align: center; font-size: 36px; font-weight: bold; color: #2C3E50;">My Posts</h2>
+    <h2 style="text-align: center; font-size: 36px; font-weight: bold; color: #2C3E50;"><i class="fas fa-file-alt" style="margin-right: 20px;"></i>My Posts</h2>
 
     <!-- Success message here -->
     @if(session()->has('message'))

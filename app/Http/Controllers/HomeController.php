@@ -478,14 +478,14 @@ public function connections()
     }
 
     $followers = $user->followers;
-    $followings = $user->followings; // ✅ full user models
-    $followingIds = $followings->pluck('id'); // ✅ for quick ID check
+    $followings = $user->followings; 
+    $followingIds = $followings->pluck('id'); 
 
     $suggestions = User::whereNotIn('id', $followingIds)
                         ->where('id', '!=', $user->id)
                         ->get();
 
-    return view('home.connections', compact('followers', 'followings', 'followingIds', 'suggestions'));
+    return view('home.connections', compact('user', 'followers', 'followings', 'followingIds', 'suggestions'));
 }
 
 
@@ -776,6 +776,23 @@ public function deleteBasicInfo(Request $request)
     $user->save();
 
     return back()->with('success', 'Basic info deleted successfully.');
+}
+
+public function userView($id)
+{
+    $user = User::findOrFail($id);
+    $posts = Post::where('user_id', $id)
+                ->where('post_staus', 'active')
+                ->latest()
+                ->get();
+
+    return view('home.user_view', compact('user', 'posts'));
+}
+
+public function viewUserDetails($id)
+{
+    $user = User::findOrFail($id);
+    return view('home.view_details', compact('user'));
 }
 
 }

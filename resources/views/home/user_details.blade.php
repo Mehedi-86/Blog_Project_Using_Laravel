@@ -52,6 +52,11 @@
         outline: none;
         box-shadow: 0 0 0 2px rgba(108, 117, 125, 0.25);
     }
+
+    .icon-dark {
+        color: #343a40;
+    }
+    
 </style>
 
 </head>
@@ -61,10 +66,21 @@
         @include('home.header')
     </div>
 
-    <div class="container mb-5" >
-       <h3 class="mb-4 text-center display-6 fw-bold" style="font-size: 2rem; color: #343a40;">
-            <i class="bi bi-person-circle me-2"></i> Profile Details
-        </h3>
+     <div class="container mb-5" >
+        <div class="row align-items-center mb-4">
+            <div class="col text-start">
+                <a href="{{ route('user.profile', ['id' => $user->id]) }}"
+                class="btn shadow-sm rounded-circle px-2 py-1" style="background-color: #e9ecef; color: #495057; border: 1px solid #ced4da;"> <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+        <div class="col text-center">
+            <h3 class="display-6 fw-bold mb-0 icon-dark" style="font-size: 2rem;">
+                <i class="bi bi-person-circle me-2"></i> Profile Details
+            </h3>
+        </div>
+        <div class="col"><!-- Empty column to balance layout --></div>
+    </div>
+
 
         <!-- Work Section -->
 <div class="profile-section">

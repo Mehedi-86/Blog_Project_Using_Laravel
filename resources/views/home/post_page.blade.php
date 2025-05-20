@@ -180,7 +180,7 @@
         @include('home.header')
     </div>
 
-    <h1 class="title_deg">Update Post</h1>
+    <h1 class="title_deg"><i class="fas fa-edit" style="margin-right: 20px;"></i>Update Post</h1>
 
     @if(session()->has('message'))
     <div class="alert alert-success full_width alert-dismissible fade show" role="alert">
