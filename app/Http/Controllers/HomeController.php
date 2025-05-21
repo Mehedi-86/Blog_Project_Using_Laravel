@@ -310,11 +310,6 @@ public function about()
     return view('home.about'); 
 }
 
-public function blog()
-{
-    return view('home.blog'); 
-}
-
 public function storeReply(Request $request, Comment $comment)
 {
     if (!auth()->check()) {
@@ -781,10 +776,11 @@ public function deleteBasicInfo(Request $request)
 public function userView($id)
 {
     $user = User::findOrFail($id);
+    
     $posts = Post::where('user_id', $id)
                 ->where('post_staus', 'active')
                 ->latest()
-                ->get();
+                ->paginate(5); // You can change 5 to any number per page
 
     return view('home.user_view', compact('user', 'posts'));
 }

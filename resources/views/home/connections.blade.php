@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <base href="/public">
+
     @include('home.homecss')
     <!-- Add Bootstrap Icons CDN to <head> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -143,21 +143,22 @@
 
     <ul class="nav nav-tabs mb-4" id="connectionTabs" role="tablist">
         <li class="nav-item">
-            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#followers" type="button">
+            <a class="nav-link active" data-bs-toggle="tab" href="#followers" role="tab">
                 <i class="bi bi-person-fill-down me-1"></i> Followers
-            </button>
+            </a>
         </li>
         <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#followings" type="button">
+            <a class="nav-link" data-bs-toggle="tab" href="#followings" role="tab">
                 <i class="bi bi-person-fill-up me-1"></i> Followings
-            </button>
+            </a>
         </li>
         <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#suggestions" type="button">
+            <a class="nav-link" data-bs-toggle="tab" href="#suggestions" role="tab">
                 <i class="bi bi-person-plus-fill me-1"></i> Suggestions
-            </button>
+            </a>
         </li>
     </ul>
+
 
     <div class="tab-content">
     <!-- Followers Tab -->
@@ -238,5 +239,43 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const hash = window.location.hash;
+        if (hash) {
+            const tabLink = document.querySelector(`a.nav-link[href="${hash}"]`);
+            if (tabLink) {
+                const tab = new bootstrap.Tab(tabLink);
+                tab.show();
+            }
+        }
+
+        // Update URL hash on tab change
+        const tabLinks = document.querySelectorAll('a[data-bs-toggle="tab"]');
+        tabLinks.forEach(link => {
+            link.addEventListener('shown.bs.tab', function (e) {
+                history.replaceState(null, null, e.target.getAttribute('href'));
+            });
+        });
+
+        // Append current hash to form action
+        const forms = document.querySelectorAll('form');
+        forms.forEach(form => {
+            form.addEventListener('submit', function () {
+                const currentHash = window.location.hash;
+                if (currentHash) {
+                    // Append hash only if not already present
+                    const action = form.getAttribute('action');
+                    if (!action.includes('#')) {
+                        form.setAttribute('action', action + currentHash);
+                    }
+                }
+            });
+        });
+    });
+</script>
+
 </body>
 </html>

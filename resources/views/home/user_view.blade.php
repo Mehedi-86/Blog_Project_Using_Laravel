@@ -111,26 +111,34 @@
 
         
         <div class="tab-content" id="userTabContent">
-            <!-- Posts Tab -->
-            <div class="tab-pane fade show active" id="posts" role="tabpanel">
-                @forelse($posts as $post)
-                    <div class="card mb-3">
-                        <div class="card-body d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 class="card-title fs-4 fw-semibold">{{ $post->title }}</h5>
-                                <p class="card-text fs-5">{{ Str::limit($post->content, 100) }}</p>
-                                <small class="text-muted fs-6">{{ $post->created_at->diffForHumans() }}</small>
-                            </div>
-                            <a href="{{ route('post.details', $post->id) }}" 
-                            class="btn btn-primary px-3 py-2 ms-3" style="font-size: 0.9rem; white-space: nowrap;">   <i class="bi bi-eye-fill me-1"></i> <strong>View Post </strong></a>
+        <!-- Posts Tab -->
+        <div class="tab-pane fade show active" id="posts" role="tabpanel">
+            @forelse($posts as $post)
+                <div class="card mb-3">
+                    <div class="card-body d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="card-title fs-4 fw-semibold">{{ $post->title }}</h5>
+                            <p class="card-text fs-5">{{ Str::limit($post->content, 100) }}</p>
+                            <small class="text-muted fs-6">{{ $post->created_at->diffForHumans() }}</small>
                         </div>
+                        <a href="{{ route('post.details', $post->id) }}" 
+                        class="btn btn-primary px-3 py-2 ms-3" 
+                        style="font-size: 0.9rem; white-space: nowrap;">
+                        <i class="bi bi-eye-fill me-1"></i> <strong>View Post</strong>
+                        </a>
                     </div>
-                @empty
-                    <p class="text-muted fs-5">No posts available.</p>
-                @endforelse
+                </div>
+            @empty
+                <p class="text-muted fs-5">No posts available.</p>
+            @endforelse
+
+            <!-- Pagination -->
+            <div class="mt-3">
+                {{ $posts->withQueryString()->links() }}
             </div>
         </div>
     </div>
+  </div>
 
     <!-- Footer -->
     @include('home.footer')

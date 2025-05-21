@@ -25,12 +25,6 @@
                            </a>
                         </li>
 
-                        <li class="nav-item">
-                           <a class="nav-link" href="{{ route('blog.page') }}">
-                                 <i class="fas fa-blog me-2"></i> Blog
-                           </a>
-                        </li>
-
                         @if (Route::has('login'))
                            @auth
                                  <li><x-app-layout></x-app-layout></li>
@@ -84,8 +78,7 @@
                      </li>
 
                      <li><a href="{{ route('about.page') }}"><i class="fas fa-info-circle me-2"></i>About</a></li>                    
-                     <li><a href="{{ route('blog.page') }}"><i class="fas fa-blog me-2"></i>Blog</a></li>
-            
+         
                      @if (Route::has('login'))
                      @auth
                      

@@ -90,8 +90,6 @@ Route::delete('/reply/{reply}', [HomeController::class, 'destroyReply'])->name('
 
 Route::get('/about', [HomeController::class, 'about'])->name('about.page');
 
-Route::get('/blog', [HomeController::class, 'blog'])->name('blog.page');
-
 Route::post('/increase-view/{id}', [HomeController::class, 'increase_view']);
 
 Route::get('/profile/{id}', [HomeController::class, 'profile'])->name('user.profile');
