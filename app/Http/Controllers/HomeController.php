@@ -791,4 +791,32 @@ public function viewUserDetails($id)
     return view('home.view_details', compact('user'));
 }
 
+public function switchToUserHomepage(Request $request)
+{
+    $selectedCategory = $request->query('category');
+    $searchTerm = $request->query('search');
+
+    $query = Post::where('post_staus', 'active')->latest();
+
+    if ($selectedCategory) {
+        $category = Category::where('name', $selectedCategory)->first();
+        if ($category) {
+            $query->where('category_id', $category->id);
+        }
+    }
+
+    if ($searchTerm) {
+        $query->where(function ($q) use ($searchTerm) {
+            $q->where('title', 'like', '%' . $searchTerm . '%')
+              ->orWhere('description', 'like', '%' . $searchTerm . '%');
+        });
+    }
+
+    $post = $query->get();
+    $categories = Category::all();
+
+    return view('home.homepage', compact('post', 'categories', 'selectedCategory', 'searchTerm'));
+}
+
+
 }

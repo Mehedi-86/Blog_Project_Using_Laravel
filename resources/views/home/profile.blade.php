@@ -241,6 +241,13 @@
 
                 {{-- Details button --}}
                 <a href="{{ route('user.details', $user->id) }}" class="btn btn-primary">Details</a>
+
+                {{-- Conditionally show Switch to Admin Dashboard button --}}
+                    @if (Auth::user() && Auth::user()->usertype === 'admin')
+                        <a href="{{ route('admin.profile') }}" class="btn btn-dark">
+                            Switch Dashboard
+                        </a>
+                    @endif
             </div>
             </form>
         </div>

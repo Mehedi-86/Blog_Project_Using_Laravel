@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 
 class AdminController extends Controller
@@ -125,5 +126,51 @@ class AdminController extends Controller
     return view('admin.admin_post', compact('data'));
    }
 
+   public function showAllPosts()
+{
+    $data = Post::orderBy('created_at', 'desc')->get(); // You can use ->paginate(12) if needed
+    return view('admin.all_posts', compact('data'));
+}
+
+public function readPost($id)
+{
+    $post = Post::findOrFail($id);
+    return view('admin.read_post', compact('post'));
+}
+
+public function incrementView($id)
+{
+    $post = Post::findOrFail($id);
+    $post->increment('views');
+    return response()->json(['status' => 'success']);
+}
+
+public function adminProfile()
+{
+    $admin = Auth::user(); // assumes the admin is logged in
+    return view('admin.admin_profile', compact('admin'));
+}
+
+public function updatePicture(Request $request)
+{
+    $request->validate([
+        'profile_picture' => 'required|image|mimes:jpeg,png,jpg|max:5120',
+    ], [
+        'profile_picture.max' => 'Maximum size should be 5MB',
+    ]);
+
+    $admin = Auth::user();
+
+    if ($admin->profile_picture && Storage::disk('public')->exists($admin->profile_picture)) {
+        Storage::disk('public')->delete($admin->profile_picture);
+    }
+
+    $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+
+    $admin->profile_picture = $path;
+    $admin->save();
+
+    return redirect()->route('admin.profile')->with('success', 'Profile picture updated!');
+}
 
 }

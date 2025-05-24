@@ -54,6 +54,16 @@ Route::get('/edit_page/{id}', [AdminController::class, 'edit_page']);
 
 Route::post('/update_post/{id}', [AdminController::class, 'update_post']);
 
+Route::get('/all_posts', [AdminController::class, 'showAllPosts'])->name('admin.allposts');
+
+Route::get('/read_post/{id}', [AdminController::class, 'readPost'])->name('read.post');
+
+Route::post('/admin/increment-view/{id}', [AdminController::class, 'incrementView']);
+
+Route::get('/admin_profile', [AdminController::class, 'adminProfile'])->name('admin.profile')->middleware('auth');
+
+Route::post('/admin/profile/picture/update', [AdminController::class, 'updatePicture'])->name('admin.profile.picture.update')->middleware('auth');
+
 Route::get('/post_details/{id}', [HomeController::class, 'post_details'])->name('post.details');
 
 Route::get('/create_post', [HomeController::class, 'create_post'])->middleware('auth');
@@ -141,3 +151,5 @@ Route::delete('/profile/basicinfo/delete', [HomeController::class, 'deleteBasicI
 Route::get('/user/view/{id}', [HomeController::class, 'userView'])->name('user.view');
 
 Route::get('/user/view-details/{id}', [HomeController::class, 'viewUserDetails'])->name('user.viewDetails');
+
+Route::get('/switch-to-user-home', [HomeController::class, 'switchToUserHomepage'])->name('switch.user.home');

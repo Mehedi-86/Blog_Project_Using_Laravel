@@ -67,7 +67,6 @@
         <table class="table_deg">
             <tr class="th_deg">
                 <th>Post title </th>
-                <th>Description </th>
                 <th>Post by </th>
                 <th>Post Status </th>
                 <th>User Type </th>
@@ -82,7 +81,6 @@
 
             <tr>
                 <td>{{$post->title}}</td>
-                <td>{{$post->description}}</td>
                 <td>{{$post->name}}</td>
                 <td>{{$post->post_staus}}</td>
                 <td>{{$post->usertype}}</td>
