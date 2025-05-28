@@ -23,37 +23,42 @@ class HomeController extends Controller
 {
     
     public function homepage(Request $request)
-   {
-        // If the user is logged in and is an admin, redirect to admin dashboard
-        if (Auth::check() && Auth::user()->usertype === 'admin') {
+{
+    // Check if user is logged in and is admin
+    if (Auth::check() && Auth::user()->usertype === 'admin') {
+        // If admin is NOT viewing as user, show admin dashboard
+        if (!session('view_as_user')) {
             return view('admin.adminhome');
         }
+        // Else: continue to user homepage below
+    }
 
-        // Continue loading the public or user homepage (same logic for both)
-        $selectedCategory = $request->query('category');
-        $searchTerm = $request->query('search');
+    // Continue loading the public or user homepage
+    $selectedCategory = $request->query('category');
+    $searchTerm = $request->query('search');
 
-        $query = Post::where('post_staus', 'active')->latest();
+    $query = Post::where('post_staus', 'active')->latest();
 
-        if ($selectedCategory) {
-            $category = Category::where('name', $selectedCategory)->first();
-            if ($category) {
-                $query->where('category_id', $category->id);
-            }
+    if ($selectedCategory) {
+        $category = Category::where('name', $selectedCategory)->first();
+        if ($category) {
+            $query->where('category_id', $category->id);
         }
+    }
 
-        if ($searchTerm) {
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('title', 'like', '%' . $searchTerm . '%')
-                ->orWhere('description', 'like', '%' . $searchTerm . '%');
-            });
-        }
+    if ($searchTerm) {
+        $query->where(function ($q) use ($searchTerm) {
+            $q->where('title', 'like', '%' . $searchTerm . '%')
+              ->orWhere('description', 'like', '%' . $searchTerm . '%');
+        });
+    }
 
-        $post = $query->get();
-        $categories = Category::all();
+    $post = $query->get();
+    $categories = Category::all();
 
-        return view('home.homepage', compact('post', 'categories', 'selectedCategory', 'searchTerm'));
-  }
+    return view('home.homepage', compact('post', 'categories', 'selectedCategory', 'searchTerm'));
+}
+
 
   public function post_details($id)
   {
@@ -791,31 +796,16 @@ public function viewUserDetails($id)
     return view('home.view_details', compact('user'));
 }
 
-public function switchToUserHomepage(Request $request)
+public function switchToAdminDashboard()
 {
-    $selectedCategory = $request->query('category');
-    $searchTerm = $request->query('search');
+    session()->forget('view_as_user'); // This switches back
+    return redirect()->route('homepage'); // Will now go to admin dashboard
+}
 
-    $query = Post::where('post_staus', 'active')->latest();
-
-    if ($selectedCategory) {
-        $category = Category::where('name', $selectedCategory)->first();
-        if ($category) {
-            $query->where('category_id', $category->id);
-        }
-    }
-
-    if ($searchTerm) {
-        $query->where(function ($q) use ($searchTerm) {
-            $q->where('title', 'like', '%' . $searchTerm . '%')
-              ->orWhere('description', 'like', '%' . $searchTerm . '%');
-        });
-    }
-
-    $post = $query->get();
-    $categories = Category::all();
-
-    return view('home.homepage', compact('post', 'categories', 'selectedCategory', 'searchTerm'));
+public function switchToUserHomepage()
+{
+    session(['view_as_user' => true]);
+    return redirect()->route('homepage');
 }
 
 
