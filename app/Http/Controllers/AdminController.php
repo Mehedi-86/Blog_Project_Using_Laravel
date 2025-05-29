@@ -15,34 +15,10 @@ class AdminController extends Controller
         return view('admin.post_page');
     }
 
-    public function add_post(Request $request)
-    { 
-      $user=Auth()->user();
-      $userid=$user->id;
-      $name=$user->name;
-      $usertype=$user->usertype;
 
-      $post = new Post;
-      $post->title = $request->title;
-      $post->description = $request->description;
-      $post->post_staus = 'active';
-      $post->user_id = $userid;
-      $post->name = $name;
-      $post->usertype = $usertype;
-
-////////////
-      $image=$request->image;
-
-      if($image)
-      {
-      $imagename=time().'.'.$image->getClientOriginalExtension();
-      $request->image->move('postimage',$imagename);
-      $post->image = $imagename;
-      }
-////////////
-
-      $post->save();
-      return redirect()->back()->with('message','Post Added Successfully');
+    public function adminHome()
+    {
+        return view('admin.adminhome');
     }
 
     public function show_post()
@@ -118,32 +94,6 @@ class AdminController extends Controller
 
     }
 
-    public function admin_post()
-    {
-
-    $adminId = Auth::id();
-    $data = Post::where('user_id', $adminId)->get();
-    return view('admin.admin_post', compact('data'));
-   }
-
-   public function showAllPosts()
-{
-    $data = Post::orderBy('created_at', 'desc')->get(); // You can use ->paginate(12) if needed
-    return view('admin.all_posts', compact('data'));
-}
-
-public function readPost($id)
-{
-    $post = Post::findOrFail($id);
-    return view('admin.read_post', compact('post'));
-}
-
-public function incrementView($id)
-{
-    $post = Post::findOrFail($id);
-    $post->increment('views');
-    return response()->json(['status' => 'success']);
-}
 
 public function adminProfile()
 {

@@ -11,12 +11,9 @@
         </div>
         <!-- Sidebar Navidation Menus--><span class="heading">Main</span>
         <ul class="list-unstyled">
-                <li class="active"><a href="{{ route('home') }}"> <i class="icon-home"></i>Home </a></li>
+                <li class="admin-home"><a href="{{ route('admin.home') }}"><i class="icon-home"></i> Home</a></li>
                 <li><a href="{{ url('/admin_profile') }}"> <i class="fa fa-user"></i>Profile</a></li>
-                <li><a href="{{ url('/all_posts') }}"> <i class="fa fa-list"></i>All Posts </a></li>
-                <li><a href="{{url('post_page')}}"> <i class="icon-grid"></i>Add Post </a></li>
                 <li><a href="{{url('/show_post')}}"> <i class="fa fa-bar-chart"></i>Show Post </a></li>
-                <li><a href="{{url('admin_post')}}"> <i class="icon-padnote"></i>Admin Post </a></li>
                 <li><a href="#exampledropdownDropdown" aria-expanded="false" data-toggle="collapse"> <i class="icon-windows"></i>Example dropdown </a>
                   <ul id="exampledropdownDropdown" class="collapse list-unstyled ">
                     <li><a href="#">Page</a></li>

@@ -42,9 +42,6 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/home', [HomeController::class, 'homepage'])->middleware('auth')->name('home');
 
 // Admin Routes 
-Route::get('/post_page', [AdminController::class, 'post_page']);
-
-Route::post('/add_post', [AdminController::class, 'add_post']);
 
 Route::get('/show_post', [AdminController::class, 'show_post']);
 
@@ -54,15 +51,11 @@ Route::get('/edit_page/{id}', [AdminController::class, 'edit_page']);
 
 Route::post('/update_post/{id}', [AdminController::class, 'update_post']);
 
-Route::get('/all_posts', [AdminController::class, 'showAllPosts'])->name('admin.allposts');
-
-Route::get('/read_post/{id}', [AdminController::class, 'readPost'])->name('read.post');
-
-Route::post('/admin/increment-view/{id}', [AdminController::class, 'incrementView']);
-
 Route::get('/admin_profile', [AdminController::class, 'adminProfile'])->name('admin.profile')->middleware('auth');
 
 Route::post('/admin/profile/picture/update', [AdminController::class, 'updatePicture'])->name('admin.profile.picture.update')->middleware('auth');
+
+Route::get('/admin/home', [AdminController::class, 'adminHome'])->name('admin.home');
 
 Route::get('/post_details/{id}', [HomeController::class, 'post_details'])->name('post.details');
 
