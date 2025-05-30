@@ -72,7 +72,6 @@
                 <th>User Type </th>
                 <th>Image </th>
                 <th>Delete </th>
-                <th>Edit </th>
                 <th>Status Accept </th>
                 <th>Status Reject </th>
             </tr>
@@ -86,9 +85,6 @@
                 <td>{{$post->usertype}}</td>
                 <td><img class="img_deg" src="postimage/{{$post->image}}"></td>
                 <td><a href="{{url('delete_post',$post->id)}}" class="btn btn-danger" onclick="confirmation(event)">Delete</a></td>
-                <td>
-                    <a href="{{url('edit_page',$post->id)}}" class="btn btn-success">Edit</a>
-                </td>
                 <td>
                   <a onclick="return confirm('Are you sure to accept this post?')" href="{{url('accept_post',$post->id)}}" class="btn btn-outline-secondary">Accept</a>
                 </td>

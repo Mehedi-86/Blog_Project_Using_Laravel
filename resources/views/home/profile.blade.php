@@ -244,7 +244,7 @@
 
                 {{-- Conditionally show Switch to Admin Dashboard button --}}
                     @if (Auth::user() && Auth::user()->usertype === 'admin')
-                        <a href="{{ route('admin.profile') }}" class="btn btn-dark">
+                        <a href="{{ route('admin.home') }}" class="btn btn-dark">
                             Switch Dashboard
                         </a>
                     @endif

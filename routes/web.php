@@ -43,19 +43,11 @@ Route::get('/home', [HomeController::class, 'homepage'])->middleware('auth')->na
 
 // Admin Routes 
 
-Route::get('/show_post', [AdminController::class, 'show_post']);
+Route::get('/show_post', [AdminController::class, 'show_post'])->middleware('auth');
 
-Route::get('/delete_post/{id}', [AdminController::class, 'delete_post']);
+Route::get('/delete_post/{id}', [AdminController::class, 'delete_post'])->middleware('auth');
 
-Route::get('/edit_page/{id}', [AdminController::class, 'edit_page']);
-
-Route::post('/update_post/{id}', [AdminController::class, 'update_post']);
-
-Route::get('/admin_profile', [AdminController::class, 'adminProfile'])->name('admin.profile')->middleware('auth');
-
-Route::post('/admin/profile/picture/update', [AdminController::class, 'updatePicture'])->name('admin.profile.picture.update')->middleware('auth');
-
-Route::get('/admin/home', [AdminController::class, 'adminHome'])->name('admin.home');
+Route::get('/admin/home', [AdminController::class, 'adminHome'])->middleware('auth')->name('admin.home');
 
 Route::get('/post_details/{id}', [HomeController::class, 'post_details'])->name('post.details');
 

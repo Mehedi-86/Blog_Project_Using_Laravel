@@ -12,7 +12,7 @@
         <!-- Sidebar Navidation Menus--><span class="heading">Main</span>
         <ul class="list-unstyled">
                 <li class="admin-home"><a href="{{ route('admin.home') }}"><i class="icon-home"></i> Home</a></li>
-                <li><a href="{{ url('/admin_profile') }}"> <i class="fa fa-user"></i>Profile</a></li>
+                <li><a href="{{ route('switch.user.home') }}"><i class="fas fa-random me-1"></i> Switch Dashboard</a></li>
                 <li><a href="{{url('/show_post')}}"> <i class="fa fa-bar-chart"></i>Show Post </a></li>
                 <li><a href="#exampledropdownDropdown" aria-expanded="false" data-toggle="collapse"> <i class="icon-windows"></i>Example dropdown </a>
                   <ul id="exampledropdownDropdown" class="collapse list-unstyled ">
