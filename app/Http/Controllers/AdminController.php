@@ -28,38 +28,47 @@ class AdminController extends Controller
     }
 
     public function delete_post($id)
-    {
-        $post = Post::find($id);
+{
+    $post = Post::find($id);
 
-
-        if (!empty($post->image)) {
-            $imagePath = public_path('postimage/' . $post->image);
-            if (file_exists($imagePath)) {
-                unlink($imagePath);
-            }
-        }        
-
-      $post->delete();
-      return redirect()->back()->with('message','Post Deleted Successfully');
+    if (!empty($post->image)) {
+        $imagePath = public_path('postimage/' . $post->image);
+        if (file_exists($imagePath)) {
+            unlink($imagePath);
+        }
     }
 
-    public function accept_post($id)
-    {
-        $data = Post::find($id);
-        $data->post_staus='active';
-        $data->save();
-        return redirect()->back()->with('message','Post Status changed to Active');
+    $post->delete();
+    return redirect()->back()->with([
+        'message' => 'Post Deleted Successfully',
+        'type' => 'danger' // For red alert
+    ]);
+}
 
-    }
+public function accept_post($id)
+{
+    $data = Post::find($id);
+    $data->post_staus = 'active';
+    $data->save();
 
-    public function reject_post($id)
-    {
-        $data = Post::find($id);
-        $data->post_staus='rejected';
-        $data->save();
-        return redirect()->back()->with('message','Post Status changed to Rejected');
+    return redirect()->back()->with([
+        'message' => 'Post Status changed to Active',
+        'type' => 'success' // For green alert
+    ]);
+}
 
-    }
+public function reject_post($id)
+{
+    $data = Post::find($id);
+    $data->post_staus = 'rejected';
+    $data->save();
+
+    return redirect()->back()->with([
+        'message' => 'Post Status changed to Rejected',
+        'type' => 'danger' // You can change to 'warning' if desired
+    ]);
+}
+
 
     public function viewPostDetails($id)
 {
