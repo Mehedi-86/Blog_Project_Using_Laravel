@@ -10,9 +10,20 @@
         .post-image {
           display: block;
           margin: 20px auto;
-          width: 500px;
-          height: 250px;
+          width: 600px;
+          height: 350px;
           object-fit: cover;
+          border-radius: 12px; /* Rounded corners */
+          border: 3px solid #4A148C; /* Purple-ish border */
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+          transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+          cursor: pointer;
+        }
+
+        .post-image:hover {
+          transform: scale(1.05);
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+          border-color: #311B92; /* Darker purple on hover */
         }
 
         /* Increase container width */
@@ -23,7 +34,7 @@
         }
 
         .desc_content {
-          font-size: 20px;
+          font-size: 19px;
           line-height: 1.8;
           color: #333;
           text-align: justify;
@@ -31,6 +42,12 @@
           max-width: 90%;
           margin: 0 auto;
           margin-bottom: 50px;
+        }
+
+        .desc_content p {
+          font-size: 19px !important;
+          line-height: 1.8 !important;
+          color: #333 !important;
         }
 
         /* Styling for alert messages */
@@ -111,6 +128,13 @@
         body h6 {
           color: #3F51B5; /* Tailwind's blue-800 or any blue you prefer */
         }
+
+        body h1 { font-size: 1.4em; }
+        body h2 { font-size: 1.35em; }
+        body h3 { font-size: 1.3em; }
+        body h4 { font-size: 1.25em; }
+        body h5 { font-size: 1.2em; }
+        body h6 { font-size: 1.15em; }
 
         /* Dark Mode CSS start */
 
@@ -268,7 +292,7 @@
         <!-- Image and Title Section -->
         <div class="text-center">
           <img src="/postimage/{{$post->image}}" class="post-image" alt="Post Image">
-          <h4 style="font-size: 1.5rem; font-weight: bold;">{{$post->title}}</h4>
+          <h1 style="font-size: 2rem; font-weight: bold;">{{$post->title}}</h1>
           <p class="text-muted mb-1">
            Post by <b>{{ $post->name }}</b>
            <span style="margin-left: 30px; margin-right: 30px;">|</span>

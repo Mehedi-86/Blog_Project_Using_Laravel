@@ -61,5 +61,12 @@ class AdminController extends Controller
 
     }
 
+    public function viewPostDetails($id)
+{
+    $post = \App\Models\Post::with('user', 'comments.replies')->findOrFail($id);
+
+    return view('admin.post_details', compact('post'));
+}
+
 
 }

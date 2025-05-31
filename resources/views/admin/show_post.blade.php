@@ -71,6 +71,7 @@
                 <th>Post Status </th>
                 <th>User Type </th>
                 <th>Image </th>
+                <th>Visit Post</th>
                 <th>Delete </th>
                 <th>Status Accept </th>
                 <th>Status Reject </th>
@@ -84,6 +85,7 @@
                 <td>{{$post->post_staus}}</td>
                 <td>{{$post->usertype}}</td>
                 <td><img class="img_deg" src="postimage/{{$post->image}}"></td>
+                <td><a href="{{ route('admin.post.details', $post->id) }}" class="btn btn-success">Visit</a></td>
                 <td><a href="{{url('delete_post',$post->id)}}" class="btn btn-danger" onclick="confirmation(event)">Delete</a></td>
                 <td>
                   <a onclick="return confirm('Are you sure to accept this post?')" href="{{url('accept_post',$post->id)}}" class="btn btn-outline-secondary">Accept</a>
