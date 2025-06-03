@@ -272,6 +272,10 @@
         body.dark-mode b {
           color: #ffffff;
         }
+
+        body.dark-mode .desc_content p {
+          color: #cccccc !important; /* Light gray for dark background */
+        }
       </style>
 
       <base href="/public">

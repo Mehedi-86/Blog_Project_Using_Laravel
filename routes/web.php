@@ -51,6 +51,8 @@ Route::get('/admin/home', [AdminController::class, 'adminHome'])->middleware('au
 
 Route::get('/admin/post-details/{id}', [AdminController::class, 'viewPostDetails'])->name('admin.post.details')->middleware('auth');
 
+Route::get('/manage_users', [AdminController::class, 'manage_users'])->name('admin.manage.users')->middleware('auth');
+
 Route::get('/post_details/{id}', [HomeController::class, 'post_details'])->name('post.details');
 
 Route::get('/create_post', [HomeController::class, 'create_post'])->middleware('auth');

@@ -14,6 +14,7 @@
                 <li class="admin-home"><a href="{{ route('admin.home') }}"><i class="icon-home"></i> Home</a></li>
                 <li><a href="{{ route('switch.user.home') }}"><i class="fas fa-random me-1"></i> Switch Dashboard</a></li>
                 <li><a href="{{url('/show_post')}}"> <i class="fa fa-bar-chart"></i>Show Post </a></li>
+                <li><a href="{{ route('admin.manage.users') }}"><i class="fas fa-users-cog"></i> Manage Users</a></li>
                 <li><a href="#exampledropdownDropdown" aria-expanded="false" data-toggle="collapse"> <i class="icon-windows"></i>Example dropdown </a>
                   <ul id="exampledropdownDropdown" class="collapse list-unstyled ">
                     <li><a href="#">Page</a></li>

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 
 class AdminController extends Controller
@@ -77,5 +78,10 @@ public function reject_post($id)
     return view('admin.post_details', compact('post'));
 }
 
+public function manage_users()
+{
+    $users = User::where('usertype', 'user')->get(); 
+    return view('admin.manage_users', compact('users'));
+}
 
 }
