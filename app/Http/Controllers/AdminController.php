@@ -84,4 +84,28 @@ public function manage_users()
     return view('admin.manage_users', compact('users'));
 }
 
+public function banUser($id)
+{
+    $user = User::findOrFail($id);
+    $user->is_banned = true;
+    $user->save();
+
+    return back()->with([
+        'message' => 'User banned successfully!',
+        'type' => 'danger'
+    ]);
+}
+
+public function unbanUser($id)
+{
+    $user = User::findOrFail($id);
+    $user->is_banned = false;
+    $user->save();
+
+    return back()->with([
+        'message' => 'User unbanned successfully!',
+        'type' => 'success'
+    ]);
+}
+
 }

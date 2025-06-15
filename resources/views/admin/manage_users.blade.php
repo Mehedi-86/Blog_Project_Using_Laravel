@@ -86,6 +86,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Profile Picture</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -98,6 +99,19 @@
                                 <img src="{{ asset('storage/' . $user->profile_picture) }}" class="img_deg">
                             @else
                                 <span class="text-muted">No Image</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if ($user->is_banned)
+                                <form action="{{ route('admin.unban.user', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to unban this user?');">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success btn-sm">Unban</button>
+                                </form>
+                            @else
+                                <form action="{{ route('admin.ban.user', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to ban this user?');">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger btn-sm">Ban</button>
+                                </form>
                             @endif
                         </td>
                     </tr>
