@@ -61,6 +61,53 @@
             display: block;
             margin: 0 auto; /* center horizontally */
         }
+
+        .img_deg:hover {
+            transform: scale(1.1) rotate(2deg);
+            border-color: #32CD32;  /* Change border color on hover */
+            box-shadow: 0 0 10px rgba(106, 13, 173, 0.5); /* Optional glow */
+            filter: brightness(1.1);
+        }
+
+        .btn {
+            padding: 6px 14px;
+            font-size: 14px;
+            font-weight: 700 !important;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Button hover effects (applies to all buttons) */
+        .btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Success button */
+        .btn-success {
+            background-color: #28a745;
+            color: #fff;
+            border-color: #28a745;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+        /* Danger button */
+        .btn-danger {
+            background-color: #dc3545;
+            color: #fff;
+            border-color: #dc3545;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
     </style>
 </head>
 
@@ -105,12 +152,12 @@
                             @if ($user->is_banned)
                                 <form action="{{ route('admin.unban.user', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to unban this user?');">
                                     @csrf
-                                    <button type="submit" class="btn btn-success btn-sm">Unban</button>
+                                    <button type="submit" class="btn btn-success ">Unban</button>
                                 </form>
                             @else
                                 <form action="{{ route('admin.ban.user', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to ban this user?');">
                                     @csrf
-                                    <button type="submit" class="btn btn-danger btn-sm">Ban</button>
+                                    <button type="submit" class="btn btn-danger ">Ban</button>
                                 </form>
                             @endif
                         </td>

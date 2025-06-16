@@ -60,6 +60,13 @@
             border: 2px solid #ddd;
         }
 
+        .img_deg:hover {
+            transform: scale(1.1) rotate(2deg);
+            border-color: #1E90FF;  /* Change border color on hover */
+            box-shadow: 0 0 10px rgba(106, 13, 173, 0.5); /* Optional glow */
+            filter: brightness(1.1);
+        }
+
         .btn {
             padding: 6px 14px;
             font-size: 14px;
