@@ -17,6 +17,7 @@ use App\Notifications\CommentedOnPost;
 use App\Models\WorkExperience;
 use App\Models\Education;
 use App\Models\ExtraCurricularActivity;
+use App\Models\Report;
 
 
 class HomeController extends Controller
@@ -808,5 +809,32 @@ public function switchToUserHomepage()
     return redirect()->route('homepage');
 }
 
+
+public function reportPost(Request $request, $postId)
+{
+    $request->validate([
+        'reason' => 'required|string|max:255',
+    ]);
+
+    $post = Post::findOrFail($postId);
+
+    // Optional: prevent duplicate reports from same user
+    $alreadyReported = Report::where('post_id', $postId)
+        ->where('reported_by', auth()->id())
+        ->exists();
+
+    if ($alreadyReported) {
+        return back()->with('error', 'You have already reported this post.')->withFragment('like-section');
+    }
+
+    Report::create([
+        'post_id' => $postId,
+        'reported_by' => auth()->id(),
+        'user_id' => $post->user_id,
+        'report_type' => $request->reason,
+    ]);
+
+    return back()->with('success', 'Report submitted successfully.')->withFragment('like-section');
+}
 
 }

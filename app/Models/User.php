@@ -113,4 +113,9 @@ public function extraCurricularActivities()
     return $this->hasMany(ExtraCurricularActivity::class);
 }
 
+public function reportsReceived()
+{
+    return $this->hasMany(\App\Models\Report::class, 'user_id');
+}
+
 }

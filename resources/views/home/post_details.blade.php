@@ -342,7 +342,7 @@
     </div>
 
     <!-- Save Post Button -->
-    <div class="d-flex flex-column align-items-center">
+    <div class="d-flex flex-column align-items-center me-3">
         <form action="{{ auth()->check() ? route('posts.toggleSave', $post->id) : route('login') }}" method="POST">
             @csrf
             <button type="submit"
@@ -358,7 +358,63 @@
             </button>
         </form>
     </div>
+
+    <!--  Report Post Button -->
+
+  <div class="mb-3">
+      <!-- Toggle Button with modern style -->
+      <button class="btn btn-danger d-flex align-items-center" type="button" onclick="toggleReportForm()">
+          <span class="me-1"><strong>Report </strong></span> 
+          <i class="bi bi-caret-down-fill"></i>
+      </button>
+
+      <!-- Inline Report Form (Initially hidden) -->
+      <div id="reportPostForm" class="border rounded shadow-sm p-3 mt-3 bg-light" style="display: none; transition: all 0.3s ease;">
+          <form action="{{ route('post.report', $post->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to report this post?');">
+              @csrf
+
+              <div class="mb-3">
+                  <label for="reason" class="form-label fw-semibold text-danger">Reason for Reporting:</label>
+                  <select name="reason" id="reason" class="form-select border-danger" required>
+                      <option value="" disabled selected>-- Choose a reason --</option>
+                      <option value="Spam">Spam</option>
+                      <option value="Harassment">Harassment</option>
+                      <option value="Hate Speech">Hate Speech</option>
+                      <option value="False Information">False Information</option>
+                      <option value="Other">Other</option>
+                  </select>
+              </div>
+
+              <button type="submit" class="btn btn-danger w-100">
+                  <i class="bi bi-flag-fill me-1"></i> Submit 
+              </button>
+          </form>
+      </div>
+  </div>
 </div>
+
+
+<!-- Report Post Flash Messages -->
+<div style="max-height: 50px; overflow: hidden; padding: 5px 15px;">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show d-flex justify-content-between align-items-center" role="alert" style="padding: 6px 12px; font-size: 14px; font-weight: bold; margin-bottom: 10px;">
+            <div><i class="bi bi-check-circle-fill me-1"></i> {{ session('success') }}</div>
+            <button type="button" class="close ml-2" data-bs-dismiss="alert" aria-label="Close" style="font-size: 25px; font-weight: bold;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show d-flex justify-content-between align-items-center" role="alert" style="padding: 6px 12px; font-size: 14px; font-weight: bold; margin-bottom: 10px;">
+            <div><i class="bi bi-exclamation-circle-fill me-1"></i> {{ session('error') }}</div>
+            <button type="button" class="close ml-2" data-bs-dismiss="alert" aria-label="Close" style="font-size: 25px; font-weight: bold;">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @endif
+</div>
+
 
 
        <!-- Success Message for Save Post -->
@@ -603,6 +659,13 @@ function openEditModal(commentId, body, isReply = false) {
     }
 </script>
 
+<!-- Script for toggling form -->
+<script>
+    function toggleReportForm() {
+        const form = document.getElementById('reportPostForm');
+        form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
+    }
+</script>
 
 <!-- footer section start -->
 @include('home.footer')

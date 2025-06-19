@@ -57,6 +57,12 @@ Route::post('/admin/ban-user/{id}', [AdminController::class, 'banUser'])->name('
 
 Route::post('/admin/unban-user/{id}', [AdminController::class, 'unbanUser'])->name('admin.unban.user')->middleware('auth');
 
+Route::get('/admin/user/{id}/reports', [AdminController::class, 'viewUserReports'])->name('admin.user.reports')->middleware('auth');
+
+Route::get('/admin/users/{user}/reports', [AdminController::class, 'userReports'])->name('admin.user.reports');
+
+Route::delete('/admin/reports/clear/{user}', [AdminController::class, 'clearReports'])->name('admin.clear.reports');
+
 Route::get('/post_details/{id}', [HomeController::class, 'post_details'])->name('post.details');
 
 Route::get('/create_post', [HomeController::class, 'create_post'])->middleware('auth');
@@ -146,3 +152,5 @@ Route::get('/user/view/{id}', [HomeController::class, 'userView'])->name('user.v
 Route::get('/user/view-details/{id}', [HomeController::class, 'viewUserDetails'])->name('user.viewDetails');
 
 Route::get('/switch-to-user-home', [HomeController::class, 'switchToUserHomepage'])->name('switch.user.home');
+
+Route::post('/post/{id}/report', [HomeController::class, 'reportPost'])->name('post.report')->middleware('auth');

@@ -7,6 +7,7 @@ use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
+use App\Models\Report;
 
 
 class AdminController extends Controller
@@ -80,7 +81,10 @@ public function reject_post($id)
 
 public function manage_users()
 {
-    $users = User::where('usertype', 'user')->get(); 
+    $users = User::where('usertype', 'user')
+    ->withCount('reportsReceived') // Eager load report count
+    ->get();
+
     return view('admin.manage_users', compact('users'));
 }
 
@@ -106,6 +110,38 @@ public function unbanUser($id)
         'message' => 'User unbanned successfully!',
         'type' => 'success'
     ]);
+}
+
+public function viewUserReports($id)
+{
+    $reports = Report::with(['reportedBy', 'post', 'reportedUser'])
+        ->where('user_id', $id)
+        ->latest()
+        ->get();
+
+    $user = User::findOrFail($id);
+
+    return view('admin.user_reports', compact('reports', 'user'));
+}
+
+public function userReports($userId)
+{
+    $user = User::findOrFail($userId);
+
+    $reports = Report::with(['reportedBy', 'post'])
+        ->where('user_id', $userId)
+        ->latest()
+        ->get();
+
+    return view('admin.user_reports', compact('user', 'reports'));
+}
+
+public function clearReports(User $user)
+{
+    
+    Report::where('user_id', $user->id)->delete();
+
+    return redirect()->back()->with('success', 'All reports cleared successfully.');
 }
 
 }

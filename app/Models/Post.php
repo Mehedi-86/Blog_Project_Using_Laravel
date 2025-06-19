@@ -37,4 +37,9 @@ class Post extends Model
     return $this->belongsToMany(User::class, 'post_user_saves')->withTimestamps();
 }
 
+public function reports()
+{
+    return $this->hasMany(Report::class);
+}
+
 }

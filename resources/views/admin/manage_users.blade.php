@@ -108,6 +108,21 @@
             border-color: #bd2130;
         }
 
+        .badge-report-count {
+            background: linear-gradient(to right, #ff416c, #ff4b2b); /* Elegant red-pink gradient */
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 12px;
+            transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
+        }
+
+        .badge-report-count:hover {
+            transform: scale(1.08);
+            background: linear-gradient(to right, #e63946, #d62828); /* Darker premium red */
+        }
+        
     </style>
 </head>
 
@@ -133,6 +148,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Profile Picture</th>
+                        <th>Reports</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -149,15 +165,22 @@
                             @endif
                         </td>
                         <td>
+                            <a href="{{ route('admin.user.reports', $user->id) }}">
+                                <span class="badge bg-danger badge-report-count">
+                                    {{ $user->reports_received_count ?? 0 }}
+                                </span>
+                            </a>
+                        </td>
+                        <td>
                             @if ($user->is_banned)
                                 <form action="{{ route('admin.unban.user', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to unban this user?');">
                                     @csrf
-                                    <button type="submit" class="btn btn-success ">Unban</button>
+                                    <button type="submit" class="btn btn-success">Unban</button>
                                 </form>
                             @else
                                 <form action="{{ route('admin.ban.user', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to ban this user?');">
                                     @csrf
-                                    <button type="submit" class="btn btn-danger ">Ban</button>
+                                    <button type="submit" class="btn btn-danger">Ban</button>
                                 </form>
                             @endif
                         </td>
