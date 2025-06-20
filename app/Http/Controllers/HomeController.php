@@ -18,6 +18,7 @@ use App\Models\WorkExperience;
 use App\Models\Education;
 use App\Models\ExtraCurricularActivity;
 use App\Models\Report;
+use App\Notifications\UserReportedThresholdReached;
 
 
 class HomeController extends Controller
@@ -827,12 +828,28 @@ public function reportPost(Request $request, $postId)
         return back()->with('error', 'You have already reported this post.')->withFragment('like-section');
     }
 
+    // Create the report
     Report::create([
         'post_id' => $postId,
         'reported_by' => auth()->id(),
-        'user_id' => $post->user_id,
+        'user_id' => $post->user_id, // The user being reported
         'report_type' => $request->reason,
     ]);
+
+    // Count reports for the reported user
+    $reportedUser = User::find($post->user_id);
+    $reportCount = Report::where('user_id', $reportedUser->id)->count();
+
+    // Notify the user if threshold is reached and not already notified
+    if ($reportCount >= 5) {
+        $alreadyNotified = $reportedUser->notifications()
+            ->where('type', 'App\Notifications\UserReportedThresholdReached')
+            ->exists();
+
+        if (!$alreadyNotified) {
+            $reportedUser->notify(new UserReportedThresholdReached($reportCount));
+        }
+    }
 
     return back()->with('success', 'Report submitted successfully.')->withFragment('like-section');
 }

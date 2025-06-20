@@ -304,6 +304,11 @@
                             </p>
                             <a href="{{ url('post_details', $notification->data['post_id'] ?? '#') }}">View Post</a>
 
+                            @elseif($notification->type === 'App\Notifications\UserReportedThresholdReached')
+                            <div class="alert alert-warning mb-0" style="font-weight: 500;">
+                                {{ $notification->data['message'] ?? 'You have been reported multiple times.' }}
+                            </div>
+
                         @else
                             <p>New notification</p>
                         @endif
