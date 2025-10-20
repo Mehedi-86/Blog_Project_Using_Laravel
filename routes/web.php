@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth; // Import Auth
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\MailController;
 
 /*
 |--------------------------------------------------------------------------
@@ -154,3 +155,5 @@ Route::get('/user/view-details/{id}', [HomeController::class, 'viewUserDetails']
 Route::get('/switch-to-user-home', [HomeController::class, 'switchToUserHomepage'])->name('switch.user.home');
 
 Route::post('/post/{id}/report', [HomeController::class, 'reportPost'])->name('post.report')->middleware('auth');
+
+Route::post('/send-footer-mail', [MailController::class, 'sendFooterMail'])->name('send.footer.mail');
