@@ -82,6 +82,12 @@
 document.getElementById('send_email_btn').addEventListener('click', function(e) {
     e.preventDefault();
 
+    @guest
+        // If user is not logged in, redirect to login page
+        window.location.href = "{{ route('login') }}";
+        return;
+    @endguest
+
     var emailInput = document.getElementById('footer_email').value.trim();
 
     if(emailInput === '') {
