@@ -19,7 +19,7 @@ use App\Models\Education;
 use App\Models\ExtraCurricularActivity;
 use App\Models\Report;
 use App\Notifications\UserReportedThresholdReached;
-
+use App\Models\UsersFooter;
 
 class HomeController extends Controller
 {
@@ -852,6 +852,28 @@ public function reportPost(Request $request, $postId)
     }
 
     return back()->with('success', 'Report submitted successfully.')->withFragment('like-section');
+}
+
+public function updateFooterLinks(Request $request)
+{
+    $request->validate([
+        'facebook_url' => 'nullable|url',
+        'twitter_url' => 'nullable|url',
+        'linkedin_url' => 'nullable|url',
+        'instagram_url' => 'nullable|url',
+    ]);
+
+    $footer = UsersFooter::updateOrCreate(
+        ['user_id' => Auth::id()],
+        [
+            'facebook_url' => $request->facebook_url,
+            'twitter_url' => $request->twitter_url,
+            'linkedin_url' => $request->linkedin_url,
+            'instagram_url' => $request->instagram_url,
+        ]
+    );
+
+    return back()->with('success', 'Footer links updated successfully!');
 }
 
 }

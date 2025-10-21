@@ -4,21 +4,21 @@
                   <div class="carousel-item active">
                      <div class="container">
                         <h1 class="banner_taital">Adventure</h1>
-                        <p class="banner_text">There are many variations of passages of Lorem Ipsum available, but the majority have sufferedThere are ma available, but the majority have suffered</p>
+                        <p class="banner_text">“Success is not just about what you accomplish in your life, but what you inspire others to do. Every line of code you write, every problem you solve, has the power to create something meaningful and make a difference.”</p>
                         <div class="read_bt"><a href="#">Get A Quote</a></div>
                      </div>
                   </div>
                   <div class="carousel-item">
                      <div class="container">
                         <h1 class="banner_taital">Adventure</h1>
-                        <p class="banner_text">There are many variations of passages of Lorem Ipsum available, but the majority have sufferedThere are ma available, but the majority have suffered</p>
+                        <p class="banner_text">“Success is not just about what you accomplish in your life, but what you inspire others to do. Every line of code you write, every problem you solve, has the power to create something meaningful and make a difference.”</p>
                         <div class="read_bt"><a href="#">Get A Quote</a></div>
                      </div>
                   </div>
                   <div class="carousel-item">
                      <div class="container">
                         <h1 class="banner_taital">Adventure</h1>
-                        <p class="banner_text">There are many variations of passages of Lorem Ipsum available, but the majority have sufferedThere are ma available, but the majority have suffered</p>
+                        <p class="banner_text">“Success is not just about what you accomplish in your life, but what you inspire others to do. Every line of code you write, every problem you solve, has the power to create something meaningful and make a difference.”</p>
                         <div class="read_bt"><a href="#">Get A Quote</a></div>
                      </div>
                   </div>

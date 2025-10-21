@@ -199,7 +199,7 @@
         </button>
     </div>              
 
-    {{-- Profile Info --}}
+   {{-- Profile Info --}}
 <div class="card p-3 mb-4">
     <div class="d-flex align-items-center">
         {{-- Profile Picture Display --}}
@@ -218,38 +218,72 @@
                 @csrf
                 <input type="file" name="profile_picture" id="profile_picture_input" accept="image/*" capture="user" style="display: none;" onchange="document.getElementById('uploadForm').submit();">
 
-                {{-- Show validation error message for profile picture --}}
+                {{-- Show validation error message --}}
                 @error('profile_picture')
                     <div id="error_message" class="text-danger mt-1">{{ $message }}</div>
                 @enderror
 
                 <div class="d-flex flex-wrap align-items-center gap-2 mt-2">
-                {{-- Show "Add" if no profile picture --}}
-                @if (!$user->profile_picture)
-                    <button type="button" class="btn btn-primary" onclick="document.getElementById('profile_picture_input').click();">
-                        Add Profile Picture
-                    </button>
-                @endif
-
-                {{-- Always show update --}}
-                <button type="button" class="btn btn-secondary" onclick="document.getElementById('profile_picture_input').click();">
-                    <strong>Update Picture</strong>
-                </button>
-
-                {{-- Connection button --}}
-                <a href="{{ route('connections') }}" class="btn btn-primary">Connections</a>
-
-                {{-- Details button --}}
-                <a href="{{ route('user.details', $user->id) }}" class="btn btn-primary">Details</a>
-
-                {{-- Conditionally show Switch to Admin Dashboard button --}}
-                    @if (Auth::user() && Auth::user()->usertype === 'admin')
-                        <a href="{{ route('admin.home') }}" class="btn btn-dark">
-                            Switch Dashboard
-                        </a>
+                    {{-- Show "Add" if no profile picture --}}
+                    @if (!$user->profile_picture)
+                        <button type="button" class="btn btn-primary" onclick="document.getElementById('profile_picture_input').click();">
+                            Add Profile Picture
+                        </button>
                     @endif
-            </div>
+
+                    {{-- Always show update --}}
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('profile_picture_input').click();">
+                        <strong>Update Picture</strong>
+                    </button>
+
+                    {{-- Connection button --}}
+                    <a href="{{ route('connections') }}" class="btn btn-primary">Connections</a>
+
+                    {{-- Details button --}}
+                    <a href="{{ route('user.details', $user->id) }}" class="btn btn-primary">Details</a>
+
+                    {{-- Conditionally show Switch to Admin Dashboard button --}}
+                    @if (Auth::user() && Auth::user()->usertype === 'admin')
+                        <a href="{{ route('admin.home') }}" class="btn btn-dark">Switch Dashboard</a>
+                    @endif
+
+                    {{-- Update Footer Button --}}
+                    <a href="javascript:void(0)" class="btn btn-success" onclick="toggleFooterForm()">Update Footer</a>
+                </div>
             </form>
+
+            {{-- Hidden Footer Form (Outside main form) --}}
+            <div id="footerForm" style="display: none; margin-top: 15px;">
+                <form action="{{ route('footer.update') }}" method="POST">
+                    @csrf
+
+                    <div class="form-group mt-2">
+                        <label>Facebook URL</label>
+                        <input type="url" name="facebook_url" class="form-control"
+                            value="{{ optional($user->footer)->facebook_url }}">
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label>Twitter URL</label>
+                        <input type="url" name="twitter_url" class="form-control"
+                            value="{{ optional($user->footer)->twitter_url }}">
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label>LinkedIn URL</label>
+                        <input type="url" name="linkedin_url" class="form-control"
+                            value="{{ optional($user->footer)->linkedin_url }}">
+                    </div>
+
+                    <div class="form-group mt-2">
+                        <label>Instagram URL</label>
+                        <input type="url" name="instagram_url" class="form-control"
+                            value="{{ optional($user->footer)->instagram_url }}">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary mt-3">Save Links</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -434,6 +468,16 @@
         document.body.classList.add('dark-mode');
     }
 </script>
+
+{{-- Toggle Script --}}
+<script>
+    function toggleFooterForm() {
+        const form = document.getElementById('footerForm');
+        form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
+    }
+</script>
+
+
 
 
 @endsection

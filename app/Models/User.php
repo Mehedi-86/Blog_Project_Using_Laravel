@@ -118,4 +118,9 @@ public function reportsReceived()
     return $this->hasMany(\App\Models\Report::class, 'user_id');
 }
 
+public function footer()
+{
+    return $this->hasOne(\App\Models\UsersFooter::class, 'user_id');
+}
+
 }

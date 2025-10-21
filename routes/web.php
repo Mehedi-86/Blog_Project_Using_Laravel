@@ -157,3 +157,5 @@ Route::get('/switch-to-user-home', [HomeController::class, 'switchToUserHomepage
 Route::post('/post/{id}/report', [HomeController::class, 'reportPost'])->name('post.report')->middleware('auth');
 
 Route::post('/send-footer-mail', [MailController::class, 'sendFooterMail'])->name('send.footer.mail');
+
+Route::post('/update-footer', [HomeController::class, 'updateFooterLinks'])->name('footer.update');

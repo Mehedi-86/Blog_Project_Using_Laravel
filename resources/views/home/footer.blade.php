@@ -41,15 +41,38 @@
          </div>
       </div>
 
-      <!-- Social Icons -->
-      <div class="social_icon">
-         <ul>
-            <li><a href="#"><img src="{{ asset('images/fb-icon.png') }}" alt="Facebook Icon"></a></li>
-            <li><a href="#"><img src="{{ asset('images/twitter-icon.png') }}" alt="Twitter Icon"></a></li>
-            <li><a href="#"><img src="{{ asset('images/linkedin-icon.png') }}" alt="LinkedIn Icon"></a></li>
-            <li><a href="#"><img src="{{ asset('images/instagram-icon.png') }}" alt="Instagram Icon"></a></li>
-         </ul>
-      </div>
+     <!-- Social Icons -->
+         <div class="social_icon">
+            <ul>
+               @auth
+                     <li>
+                        <a href="{{ Auth::user()->footer->facebook_url ?? '#' }}" target="_blank">
+                           <img src="{{ asset('images/fb-icon.png') }}" alt="Facebook Icon">
+                        </a>
+                     </li>
+                     <li>
+                        <a href="{{ Auth::user()->footer->twitter_url ?? '#' }}" target="_blank">
+                           <img src="{{ asset('images/twitter-icon.png') }}" alt="Twitter Icon">
+                        </a>
+                     </li>
+                     <li>
+                        <a href="{{ Auth::user()->footer->linkedin_url ?? '#' }}" target="_blank">
+                           <img src="{{ asset('images/linkedin-icon.png') }}" alt="LinkedIn Icon">
+                        </a>
+                     </li>
+                     <li>
+                        <a href="{{ Auth::user()->footer->instagram_url ?? '#' }}" target="_blank">
+                           <img src="{{ asset('images/instagram-icon.png') }}" alt="Instagram Icon">
+                        </a>
+                     </li>
+               @else
+                     <li><a href="#"><img src="{{ asset('images/fb-icon.png') }}" alt="Facebook Icon"></a></li>
+                     <li><a href="#"><img src="{{ asset('images/twitter-icon.png') }}" alt="Twitter Icon"></a></li>
+                     <li><a href="#"><img src="{{ asset('images/linkedin-icon.png') }}" alt="LinkedIn Icon"></a></li>
+                     <li><a href="#"><img src="{{ asset('images/instagram-icon.png') }}" alt="Instagram Icon"></a></li>
+               @endauth
+            </ul>
+         </div>
    </div>
 </div>
 <!-- footer section end -->
@@ -58,8 +81,8 @@
 <div class="copyright_section">
    <div class="container">
       <p class="copyright_text">
-         2020 All Rights Reserved. Design by 
-         <a href="https://html.design" target="_blank">Free HTML Templates</a>
+         2025 All Rights Reserved. Design by 
+         <a href="https://html.design" target="_blank">Mehedi Hasan Rabby Free HTML Templates</a>
       </p>
    </div>
 </div>
