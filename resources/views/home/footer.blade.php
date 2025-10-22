@@ -81,8 +81,8 @@
 <div class="copyright_section">
    <div class="container">
       <p class="copyright_text">
-         2025 All Rights Reserved. Design by 
-         <a href="https://html.design" target="_blank">Mehedi Hasan Rabby Free HTML Templates</a>
+         Design by 
+         <a  target="_blank">Mehedi Hasan Rabby </a>
       </p>
    </div>
 </div>
